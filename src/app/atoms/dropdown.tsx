@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import { useState, useRef, useEffect } from "react";
 import {
   borderRadiusStyles,
   borderRadiusTopStyles,
   borderRadiusBottomStyles,
-} from "../utilities/styles"
+} from "../utilities/styles";
 
 interface DropDownProps {
   label: string;
@@ -16,8 +16,8 @@ interface DropDownProps {
 
 const DropDown = ({
   label = "select",
-  backgroundColor = "black",
-  borderRadius = "md",
+  backgroundColor = "white",
+  borderRadius = "3xl",
   selectSize = true,
   inputSelect = true,
 }: DropDownProps) => {
@@ -32,36 +32,35 @@ const DropDown = ({
   const selectRef = useRef<HTMLDivElement | null>(null);
 
   const items = [
-    { name: "Ferrari", title: "Ferrari SF90 Stradale", value: 986 },
-    { name: "Lamborghini", title: "Lamborghini Aventador SVJ", value: 759 },
-    { name: "McLaren", title: "McLaren 765LT", value: 755 },
-    { name: "Bugatti", title: "Bugatti Chiron Super Sport", value: 1578 },
-    { name: "Porsche", title: "Porsche 911 Turbo S", value: 641 },
-    { name: "Aston Martin", title: "Aston Martin DBS Superleggera", value: 715 },
-    { name: "Koenigsegg", title: "Koenigsegg Jesko", value: 1600 },
-    { name: "Pagani", title: "Pagani Huayra BC", value: 791 },
-    { name: "Chevrolet", title: "Chevrolet Corvette Z06", value: 670 },
-    { name: "Dodge", title: "Dodge Challenger SRT Hellcat", value: 717 },
-    { name: "Tesla", title: "Tesla Model S Plaid", value: 1020 },
-    { name: "Ford", title: "Ford Mustang Shelby GT500", value: 760 },
-    { name: "BMW", title: "BMW M5 CS", value: 627 },
-    { name: "Audi", title: "Audi RS7 Sportback", value: 591 },
-    { name: "Mercedes", title: "Mercedes-AMG GT R", value: 577 },
-    { name: "Nissan", title: "Nissan GT-R Nismo", value: 600 },
-    { name: "Lexus", title: "Lexus LFA", value: 552 },
-    { name: "Toyota", title: "Toyota GR Supra", value: 382 },
-    { name: "Subaru", title: "Subaru WRX STI", value: 310 },
-    { name: "Honda", title: "Honda NSX Type S", value: 600 },
-    { name: "Rimac", title: "Rimac Nevera", value: 1914 },
-    { name: "Lotus", title: "Lotus Evija", value: 2000 },
-    { name: "Mazda", title: "Mazda RX-7 Spirit R", value: 276 },
-    { name: "Alfa Romeo", title: "Alfa Romeo Giulia Quadrifoglio", value: 505 },
-    { name: "Peugeot", title: "Peugeot 508 PSE", value: 355 },
-    { name: "Jaguar", title: "Jaguar F-Type R", value: 575 },
-    { name: "Chrysler", title: "Chrysler 300 SRT", value: 485 },
-    { name: "Cadillac", title: "Cadillac CT5-V Blackwing", value: 668 },
-    { name: "Hyundai", title: "Hyundai i30 N", value: 276 },
-    { name: "Kia", title: "Kia Stinger GT", value: 368 },
+    { name: "Erling Haaland", title: "Manchester City - Forward", value: 14.0 },
+    { name: "Mohamed Salah", title: "Liverpool - Midfielder", value: 13.0 },
+    { name: "Bukayo Saka", title: "Arsenal - Midfielder", value: 9.0 },
+    { name: "Son Heung-min", title: "Tottenham - Midfielder", value: 9.5 },
+    { name: "Bruno Fernandes", title: "Manchester United - Midfielder", value: 8.5 },
+    { name: "Ollie Watkins", title: "Aston Villa - Forward", value: 8.0 },
+    { name: "Kevin De Bruyne", title: "Manchester City - Midfielder", value: 10.5 },
+    { name: "Jarrod Bowen", title: "West Ham - Midfielder", value: 7.5 },
+    { name: "Dominic Solanke", title: "Bournemouth - Forward", value: 7.0 },
+    { name: "James Maddison", title: "Tottenham - Midfielder", value: 7.5 },
+    { name: "Darwin Núñez", title: "Liverpool - Forward", value: 7.5 },
+    { name: "Eberechi Eze", title: "Crystal Palace - Midfielder", value: 6.5 },
+    { name: "Marcus Rashford", title: "Manchester United - Midfielder", value: 8.5 },
+    { name: "James Ward-Prowse", title: "West Ham - Midfielder", value: 6.0 },
+    { name: "Kai Havertz", title: "Arsenal - Midfielder", value: 7.0 },
+    { name: "Alexander Isak", title: "Newcastle - Forward", value: 8.0 },
+    { name: "Cole Palmer", title: "Chelsea - Midfielder", value: 6.0 },
+    { name: "Morgan Gibbs-White", title: "Nottingham Forest - Midfielder", value: 6.0 },
+    { name: "Anthony Gordon", title: "Newcastle - Midfielder", value: 6.5 },
+    { name: "Luis Díaz", title: "Liverpool - Midfielder", value: 7.5 },
+    { name: "Phil Foden", title: "Manchester City - Midfielder", value: 8.5 },
+    { name: "Bryan Mbeumo", title: "Brentford - Midfielder", value: 6.5 },
+    { name: "Douglas Luiz", title: "Aston Villa - Midfielder", value: 5.5 },
+    { name: "João Pedro", title: "Brighton - Forward", value: 5.5 },
+    { name: "James Tarkowski", title: "Everton - Defender", value: 4.5 },
+    { name: "Joachim Andersen", title: "Crystal Palace - Defender", value: 4.5 },
+    { name: "Leon Bailey", title: "Aston Villa - Midfielder", value: 5.5 },
+    { name: "Pedro Neto", title: "Wolves - Midfielder", value: 5.5 },
+    { name: "Hwang Hee-chan", title: "Wolves - Forward", value: 5.5 },
   ];
 
   const handleClick = () => setOpenDropdown((prev) => !prev);
@@ -116,7 +115,7 @@ const DropDown = ({
 
   const displayLabel =
     selectedIndex !== null
-      ? `${items[selectedIndex].title}: ${items[selectedIndex].value} BHP`
+      ? `${items[selectedIndex].name}, ${items[selectedIndex].title}: ${items[selectedIndex].value} Mil`
       : label;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -138,8 +137,8 @@ const DropDown = ({
   // const selectedValue = value !== null ? `${items[value].value}` : ""; (* this is the code to be linked to a onSubmit function *)
 
   return (
-    <div className={`max-w-[500px]`}>
-      <div className="relative">
+    <div className="w-full">
+      <div className="relative w-full">
         <div
           className="relative text-left"
           tabIndex={0}
@@ -157,7 +156,7 @@ const DropDown = ({
                 : borderRadiusStyles(borderRadius)
             } transition-all duration-300 ease-in-out cursor-pointer ${
               selectSize ? "flex justify-between w-full" : "inline-flex"
-            } items-center gap-2 px-3 py-1.5 text-sm font-semibold relative
+            } items-center gap-2 px-6 py-5.5 text-md font-semibold relative
             after:absolute after:inset-0 after:bg-current after:brightness-90 overflow-hidden
             `}
           >
@@ -171,17 +170,17 @@ const DropDown = ({
                   setOpenDropdown(true);
                   setActiveFocusedIndex(0);
                 }}
-                className="text-white placeholder-white z-10 w-full"
+                className="text-[#38003c] z-10 w-full"
               />
             )}
             {!inputSelect && (
               <>
-                <span className="text-white z-10">{displayLabel}</span>
+                <span className="text-[#38003c] z-10">{displayLabel}</span>
               </>
             )}
 
             <svg
-              className="w-4 h-4 ml-2 text-white z-10"
+              className="w-8 h-8 ml-2 text-[#38003c] z-10"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}
@@ -201,8 +200,8 @@ const DropDown = ({
           style={{ ...(backgroundColor && { backgroundColor }) }}
           className={`${
             selectSize ? "" : "mt-2"
-          } absolute w-full text-right transition-all duration-300 ease-in-out z-50 overflow-hidden max-h-[322px] overflow-y-auto ${
-            openDropdown ? "opacity-100 max-h-[100rem]" : "opacity-0 max-h-0"
+          } absolute w-full text-right transition-all duration-300 ease-in-out z-50 overflow-hidden overflow-y-auto ${
+            openDropdown ? "opacity-100 max-h-[322px]" : "opacity-0 max-h-0"
           }
             ${
               selectSize === true && openDropdown
@@ -233,14 +232,14 @@ const DropDown = ({
                 }}
                 onMouseEnter={() => setActiveFocusedIndex(index)}
                 className={`
-                  cursor-pointer text-center border border-white/5 p-3 text-sm text-white transition outline-none
+                  cursor-pointer text-center border border-white/5 p-3 text-sm text-[#38003c] transition outline-none
                   ${isSelected ? "bg-white/10" : ""}
                   ${isFocused ? "bg-white/30" : ""}
                   hover:bg-white/20 w-full text-left overflow-hidden
                   `}
               >
                 <div className="w-full bg-transparent border-none outline-none">
-                  {`${item.name} — ${item.title}: ${item.value} BHP`}
+                  {`${item.name} — ${item.title}: ${item.value} Mil`}
                 </div>
               </div>
             );
@@ -248,13 +247,16 @@ const DropDown = ({
         </div>
         <div
           className={`${
-            openDropdown && showBottomFade ? `opacity-100 ${borderRadiusBottomStyles(borderRadius)}` : "opacity-0"
+            openDropdown && showBottomFade
+              ? `opacity-100 ${borderRadiusBottomStyles(borderRadius)}`
+              : "opacity-0"
           } pointer-events-none absolute bottom-0 left-0 w-full h-12 z-50 transition-opacity duration-300 ease-in-out`}
           style={{
-            background: `linear-gradient(to top, ${backgroundColor ?? "#22c55e"} 0%, transparent 100%)`,
+            background: `linear-gradient(to top, ${
+              backgroundColor ?? "#22c55e"
+            } 0%, transparent 100%)`,
           }}
-        >
-        </div>
+        ></div>
       </div>
     </div>
   );
