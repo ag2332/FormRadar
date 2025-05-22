@@ -1,5 +1,5 @@
-import Grid from "@/app/atoms/Grid";
-import DropDown from "../atoms/DropDown";
+import Grid from "@/app/components/atoms/Grid";
+import DropDown from "../components/atoms/dropdown";
 
 function Home() {
   return (

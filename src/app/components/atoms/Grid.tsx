@@ -1,7 +1,7 @@
 import React from "react";
 
 interface GridProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className: string;
   columns: number;
 }
@@ -16,7 +16,7 @@ const Grid = ({ children, className = "", columns = 2 }: GridProps) => {
     12: "grid-cols-12",
   }[columns];
 
-  return (<div className={`${className} grid gap-6 ${gridStyles}`}>{children}</div>)
+  return (<div className={`${className} grid gap-8 ${gridStyles}`}>{children}</div>)
 };
 
 export default Grid;

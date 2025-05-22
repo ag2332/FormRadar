@@ -4,10 +4,14 @@ import {
   borderRadiusStyles,
   borderRadiusTopStyles,
   borderRadiusBottomStyles,
-} from "../utilities/styles";
+} from "../../utilities/styles";
+import { Player } from "@/app/page";
+import { useRouter } from "next/navigation";
 
 interface DropDownProps {
   label: string;
+  items: Player[];
+  onPlayerSelect: (player: Player) => void;
   backgroundColor: string;
   borderRadius: string;
   selectSize: boolean;
@@ -16,6 +20,8 @@ interface DropDownProps {
 
 const DropDown = ({
   label = "select",
+  items,
+  onPlayerSelect,
   backgroundColor = "white",
   borderRadius = "3xl",
   selectSize = true,
@@ -31,37 +37,7 @@ const DropDown = ({
   const optionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const selectRef = useRef<HTMLDivElement | null>(null);
 
-  const items = [
-    { name: "Erling Haaland", title: "Manchester City - Forward", value: 14.0 },
-    { name: "Mohamed Salah", title: "Liverpool - Midfielder", value: 13.0 },
-    { name: "Bukayo Saka", title: "Arsenal - Midfielder", value: 9.0 },
-    { name: "Son Heung-min", title: "Tottenham - Midfielder", value: 9.5 },
-    { name: "Bruno Fernandes", title: "Manchester United - Midfielder", value: 8.5 },
-    { name: "Ollie Watkins", title: "Aston Villa - Forward", value: 8.0 },
-    { name: "Kevin De Bruyne", title: "Manchester City - Midfielder", value: 10.5 },
-    { name: "Jarrod Bowen", title: "West Ham - Midfielder", value: 7.5 },
-    { name: "Dominic Solanke", title: "Bournemouth - Forward", value: 7.0 },
-    { name: "James Maddison", title: "Tottenham - Midfielder", value: 7.5 },
-    { name: "Darwin Núñez", title: "Liverpool - Forward", value: 7.5 },
-    { name: "Eberechi Eze", title: "Crystal Palace - Midfielder", value: 6.5 },
-    { name: "Marcus Rashford", title: "Manchester United - Midfielder", value: 8.5 },
-    { name: "James Ward-Prowse", title: "West Ham - Midfielder", value: 6.0 },
-    { name: "Kai Havertz", title: "Arsenal - Midfielder", value: 7.0 },
-    { name: "Alexander Isak", title: "Newcastle - Forward", value: 8.0 },
-    { name: "Cole Palmer", title: "Chelsea - Midfielder", value: 6.0 },
-    { name: "Morgan Gibbs-White", title: "Nottingham Forest - Midfielder", value: 6.0 },
-    { name: "Anthony Gordon", title: "Newcastle - Midfielder", value: 6.5 },
-    { name: "Luis Díaz", title: "Liverpool - Midfielder", value: 7.5 },
-    { name: "Phil Foden", title: "Manchester City - Midfielder", value: 8.5 },
-    { name: "Bryan Mbeumo", title: "Brentford - Midfielder", value: 6.5 },
-    { name: "Douglas Luiz", title: "Aston Villa - Midfielder", value: 5.5 },
-    { name: "João Pedro", title: "Brighton - Forward", value: 5.5 },
-    { name: "James Tarkowski", title: "Everton - Defender", value: 4.5 },
-    { name: "Joachim Andersen", title: "Crystal Palace - Defender", value: 4.5 },
-    { name: "Leon Bailey", title: "Aston Villa - Midfielder", value: 5.5 },
-    { name: "Pedro Neto", title: "Wolves - Midfielder", value: 5.5 },
-    { name: "Hwang Hee-chan", title: "Wolves - Forward", value: 5.5 },
-  ];
+  const router = useRouter();
 
   const handleClick = () => setOpenDropdown((prev) => !prev);
 
@@ -76,7 +52,8 @@ const DropDown = ({
         if (selectedItem) {
           const selectedItemIndex = items.indexOf(selectedItem);
           setSelectedIndex(selectedItemIndex);
-          setSearchTerm(selectedItem.title);
+          setSearchTerm(selectedItem.full_name);
+          onPlayerSelect(selectedItem);
         } else if (selectedItem === true) {
           setSelectedIndex(null);
         }
@@ -115,22 +92,21 @@ const DropDown = ({
 
   const displayLabel =
     selectedIndex !== null
-      ? `${items[selectedIndex].name}, ${items[selectedIndex].title}: ${items[selectedIndex].value} Mil`
+      ? `${items[selectedIndex].name}, ${items[selectedIndex].team || items[selectedIndex].position}: ${items[selectedIndex].value} Mil`
       : label;
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const { scrollTop, scrollHeight, clientHeight } = target;
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-    setShowBottomFade(distanceFromBottom > 40);
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    setShowBottomFade(scrollHeight - scrollTop - clientHeight > 40);
   };
 
   const lowerSearchTerm = searchTerm.toLowerCase();
   const filteredItems = items.filter(
     (item) =>
       item.name.toLowerCase().includes(lowerSearchTerm) ||
-      item.title.toLowerCase().includes(lowerSearchTerm) ||
+      item.full_name.toLowerCase().includes(lowerSearchTerm) ||
+      item.team.toLowerCase().includes(lowerSearchTerm) ||
+      item.position.toLowerCase().includes(lowerSearchTerm) ||
       item.value.toString().includes(lowerSearchTerm)
   );
 
@@ -146,9 +122,7 @@ const DropDown = ({
           onKeyDown={handleKeyDown}
         >
           <div
-            style={{
-              color: backgroundColor,
-            }}
+            style={{ color: backgroundColor }}
             onClick={handleClick}
             className={`${
               selectSize === true && openDropdown
@@ -160,7 +134,7 @@ const DropDown = ({
             after:absolute after:inset-0 after:bg-current after:brightness-90 overflow-hidden
             `}
           >
-            {inputSelect && (
+            {inputSelect ? (
               <input
                 type="text"
                 placeholder={displayLabel}
@@ -172,11 +146,8 @@ const DropDown = ({
                 }}
                 className="text-[#38003c] z-10 w-full"
               />
-            )}
-            {!inputSelect && (
-              <>
+            ) : (
                 <span className="text-[#38003c] z-10">{displayLabel}</span>
-              </>
             )}
 
             <svg
@@ -186,11 +157,7 @@ const DropDown = ({
               strokeWidth={2}
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
             </svg>
           </div>
         </div>
@@ -200,7 +167,7 @@ const DropDown = ({
           style={{ ...(backgroundColor && { backgroundColor }) }}
           className={`${
             selectSize ? "" : "mt-2"
-          } absolute w-full text-right transition-all duration-300 ease-in-out z-50 overflow-hidden overflow-y-auto ${
+          } absolute w-full text-right transition-all duration-300 ease-in-out z-50 overflow-hidden overflow-y-auto text-[#38003c] ${
             openDropdown ? "opacity-100 max-h-[322px]" : "opacity-0 max-h-0"
           }
             ${
@@ -228,18 +195,21 @@ const DropDown = ({
                 aria-selected={isSelected}
                 onClick={() => {
                   setSelectedIndex(actualIndex);
+                  setSearchTerm(item.full_name);
                   setOpenDropdown(false);
+                  onPlayerSelect(item);
+                  router.push(`/player-profile/${item.id}`)
                 }}
                 onMouseEnter={() => setActiveFocusedIndex(index)}
                 className={`
                   cursor-pointer text-center border border-white/5 p-3 text-sm text-[#38003c] transition outline-none
-                  ${isSelected ? "bg-white/10" : ""}
+                  ${isSelected ? "bg-white/20" : ""}
                   ${isFocused ? "bg-white/30" : ""}
                   hover:bg-white/20 w-full text-left overflow-hidden
                   `}
               >
-                <div className="w-full bg-transparent border-none outline-none">
-                  {`${item.name} — ${item.title}: ${item.value} Mil`}
+                <div className="w-full bg-transparent border-none outline-none text-[#38003c]">
+                  {`${item.name} — ${item.position} (${item.team}): ${item.value} Mil`}
                 </div>
               </div>
             );

@@ -3,15 +3,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --header-height: 94px;
 }
 
 @theme inline {
   --color-blue: #0de6fe;
   --color-purple: #8f48ff;
+  --color-purple-dark: #38003c;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-default: var(--font-manrope);
-  --font-heading: var(--font-bebas);}
+  --font-heading: var(--font-bebas);
+  
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,14 +26,10 @@
 
 @layer base {
   h1 {
-    @apply font-heading;
-  }
-
-  h2, ul {
-    @apply font-default;
+    @apply font-heading
   }
 }
 
 body {
-  @apply font-sans bg-[var(--background)] text-[var(--foreground)] antialiased;
+  @apply font-default bg-[var(--background)] text-purple-dark antialiased;
 }

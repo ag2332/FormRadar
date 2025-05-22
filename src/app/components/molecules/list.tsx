@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { useState } from "react";
 
 interface ListProps {}
@@ -18,9 +17,9 @@ const List = ({}: ListProps) => {
         <div className="bar"></div>
       </div>
       <ul
-        className={`list-none flex items-center space-x-20 text-[#38003c] text-xl ${
+        className={`list-none flex items-center space-x-12 text-[#38003c] text-xl ${
           menuOpen
-            ? "absolute top-10 right-0 w-full bg-black flex flex-col items-center space-y-4 transition-all duration-300 ease-in-out"
+            ? "absolute top-10 right-0 w-full bg-black flex flex-col justify-end items-center space-y-4 transition-all duration-300 ease-in-out"
             : ""
         }`}
       >

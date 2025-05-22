@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Manrope } from "next/font/google";
-import Header from "./organisms/Header";
+import Header from "./components/organisms/Header";
 import "./globals.css";
+import Section from "./components/Section";
 
 const bebas = Bebas_Neue({
   weight: "400", // Only one weight available
@@ -26,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bebas.variable} ${manrope.variable} antialiased`}>
+      <body
+        className={`${bebas.variable} ${manrope.variable} antialiased bg-gradient-to-r from-blue to-purple`}
+      >
         <Header />
         <div>{children}</div>
       </body>
