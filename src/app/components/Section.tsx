@@ -19,9 +19,9 @@ export default function Section({
     return (
       <section
         id={id ? id : ""}
-        className={`w-full ${sizes} px-row-sm lg:px-row ${className}`}
+        className={`w-full ${sizes} rounded-2xl ${className}`}
       >
-        <div className={`mx-auto w-full ${innerClass} max-w-site px-8`}>
+        <div className={`mx-auto w-full ${innerClass} max-w-site`}>
           {children}
         </div>
       </section>

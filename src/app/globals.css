@@ -14,7 +14,6 @@
   --color-foreground: var(--foreground);
   --font-default: var(--font-manrope);
   --font-heading: var(--font-bebas);
-  
 }
 
 @media (prefers-color-scheme: dark) {

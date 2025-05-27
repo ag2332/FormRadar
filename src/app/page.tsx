@@ -25,6 +25,8 @@ interface Position {
 }
 
 export interface Player {
+  photo: any;
+  team_code: any;
   id: number;
   name: string;
   full_name: string;
@@ -63,6 +65,8 @@ function Home() {
               ?.singular_name || "Unknown",
           value: player.now_cost / 10,
           stats: player,
+          photo: player.photo,
+          team_code: teams.find((t) => t.id === player.team)?.id || null,
         }));
 
         setPlayers(formattedPlayers);

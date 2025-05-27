@@ -1,9 +1,7 @@
-import Section from "../section";
+import Section from "../Section";
 import Grid from "../atoms/Grid";
 import { Player } from "@/app/page";
-import { useState } from "react";
-import PointsFormData from "../../player-profile/[id]/page";
-import PointsFormCard from "./points-card";
+import { TEAM_COLORS } from "@/app/utilities/styles";
 
 interface PlayerBannerProps {
   fullName: string;
@@ -11,7 +9,7 @@ interface PlayerBannerProps {
   teamName: string;
   teamBadgeUrl: string;
   player: Player;
-  pointsFormData: PointsFormData;
+  className?: string;
 }
 
 const PlayerBanner = ({
@@ -20,51 +18,53 @@ const PlayerBanner = ({
   teamName,
   teamBadgeUrl,
   player,
-  pointsFormData,
+  className = "",
 }: PlayerBannerProps) => {
-  console.log(pointsFormData);
+  const teamColor = TEAM_COLORS[player.team] || "#cccccc";
+
   return (
-    <Section className="bg-white rounded-2xl">
-      <Grid columns={4} className={"flex items-center p-25 mt-40 mb-17 w-full"}>
+    <Section
+      className={`relative bg-white rounded-2xl text-3xl overflow-hidden ${className}`}
+    >
+      <Grid
+        columns={4}
+        className="flex items-center place-items-center w-full relative z-20"
+      >
         <div>
           <div>
-            <h1 className="text-7xl font-bold mb-4">{player.full_name}</h1>
-          </div>
-          <div className="text-lg mb-2">
-            <span className="font-semibold">Team:</span> {player.team}
-          </div>
-
-          <div className="text-lg mb-2">
-            <span className="font-semibold">Position:</span> {player.position}
-          </div>
-
-          <div className="text-lg mb-2">
-            <span className="font-semibold">Value:</span> £
-            {player.value.toFixed(1)}m
+            <h1 className="text-8xl font-bold mb-4">{player.full_name}</h1>
           </div>
         </div>
         <div className="justify-center m-0">
-          <img
-            src={playerImageUrl}
-            alt={fullName}
-            className="w-16 h-16 rounded-full mr-4"
-          />
+          <img src={playerImageUrl} alt={fullName} className="w-73 h-90" />
         </div>
         <div>
-          <PointsFormCard
-            totalPoints={pointsFormData.totalPoints}
-            bonusPoints={pointsFormData.bonusPoints}
-            gameWeekPoints={pointsFormData.gameWeekPoints}
-            form={pointsFormData.form}
-            ictIndex={pointsFormData.ictIndex}
-            selectedByPercent={pointsFormData.selectedByPercent}
-            player={player}
-          />
+          <div className="mb-2">
+            <h1 className="font-semibold">Team:</h1>
+            <div>{player.team}</div>
+          </div>
+
+          <div className="mb-2">
+            <h1 className="font-semibold">Position:</h1>
+            <div>{player.position}</div>
+          </div>
+
+          <div className="mb-2">
+            <h1 className="font-semibold">Value:</h1>
+            <div>£{player.value.toFixed(1)}m</div>
+          </div>
         </div>
         <div className="flex items-center">
-          <img src={teamBadgeUrl} alt={teamName} className="w-6 h-6 mr-2" />
+          <img src={teamBadgeUrl} alt={player.team} className="w-75 h-75" />
         </div>
       </Grid>
+
+      <div
+        className="absolute bottom-0 left-0 w-full h-15 pointer-events-none z-30"
+        style={{
+          background: `${teamColor}`,
+        }}
+      />
     </Section>
   );
 };

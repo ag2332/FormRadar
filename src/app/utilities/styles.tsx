@@ -1,3 +1,12 @@
+export function getPlayerImage(photo: string) {
+  const id = photo.split(".")[0];
+  return `https://resources.premierleague.com/premierleague/photos/players/110x140/p${id}.png`;
+}
+
+export function getTeamBadge(teamCode: number) {
+  return `https://resources.premierleague.com/premierleague/badges/t${teamCode}.png`;
+}
+
 export function borderRadiusStyles(radius: string) {
   const borderRadiusStylesList = {
     none: "rounded-none",
@@ -42,3 +51,26 @@ export function borderRadiusBottomStyles(radius: string) {
   }[radius];
   return borderRadiusBottomStylesList;
 }
+
+export const TEAM_COLORS: Record<string, string> = {
+  "Arsenal": "#DA291C",              // red
+  "Aston Villa": "#0057B8",          // claret
+  "Bournemouth": "#EF0107",          // red/black
+  "Brentford": "#1B458F",            // red/white
+  "Brighton": "#034694",             // blue
+  "Burnley": "#001C58",              // claret
+  "Chelsea": "#6CABDD",              // blue
+  "Crystal Palace": "#FF0000",       // red/blue
+  "Everton": "#FDB913",              // royal blue
+  "Fulham": "#DA291C",               // white/black
+  "Liverpool": "#D71920",            // red
+  "Luton": "#6CABDD",                // orange
+  "Man City": "#1C2C5B",             // sky blue
+  "Man Utd": "#DA291C",              // red
+  "Newcastle": "#1B458F",            // black/white
+  "Nott'm Forest": "#FDB913",        // red
+  "Sheffield Utd": "#FDB913",        // red/white
+  "Spurs": "#7A263A",                // navy
+  "West Ham": "#122F67",             // claret/blue
+  "Wolves": "#FDB913"                // gold
+};
