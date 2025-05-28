@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import Grid from "../atoms/Grid";
 import Logo from "../../assets/logo.png";
-import List from "../molecules/list";
+import List from "../atoms/list";
 import Section from "../Section";
 
 interface HeaderProps {
@@ -23,7 +22,7 @@ const Header = ({ children, className = "" }: HeaderProps) => {
       <Grid
         columns={2}
         className={
-          "fixed top-0 left-0 right-0 px-12 py-3 flex justify-between items-center bg-white w-full"
+          "fixed top-0 left-0 right-0 px-12 py-3 flex justify-between items-center bg-white w-full z-100"
         }
       >
         <div className={`flex items-center gap-2 ${className} ${menuOpen ? "open" : ""}`}>

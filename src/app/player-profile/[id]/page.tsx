@@ -6,9 +6,19 @@ import Section from "@/app/components/Section";
 import PlayerBanner from "@/app/components/molecules/player-banner";
 import { Player } from "@/app/page";
 import PointsFormCard from "@/app/components/molecules/points-card";
-import Grid from "@/app/components/atoms/Grid";
 import Card from "@/app/components/atoms/card";
-import { getPlayerImage, getTeamBadge } from "@/app/utilities/styles";
+import {
+  getPlayerImage,
+  getTeamBadge,
+  valueEfficiencyLevels,
+} from "@/app/utilities/styles";
+import {
+  calculateAverages,
+  calculatePercentile,
+  Averages,
+  PlayerRawData,
+} from "@/app/utilities/fplAverages";
+import ValueEfficiency from "@/app/components/molecules/value-efficiency";
 
 interface PointsFormData {
   totalPoints: number;
@@ -17,6 +27,14 @@ interface PointsFormData {
   form: string;
   ictIndex: string;
   selectedByPercent: string;
+  percentiles: {
+    totalPoints: number;
+    gameWeekPoints: number;
+    bonusPoints: number;
+    form: number;
+    ictIndex: number;
+    selectedByPercent: number;
+  };
 }
 
 const PlayerProfile = () => {
@@ -26,12 +44,31 @@ const PlayerProfile = () => {
   const [pointsFormData, setPointsFormData] = useState<PointsFormData | null>(
     null
   );
+  const [averages, setAverages] = useState<Averages | null>(null);
 
   useEffect(() => {
     const fetchPlayerData = async () => {
       try {
         const res = await fetch("/api/fpl");
         const data = await res.json();
+
+        const allPlayersRaw: PlayerRawData[] = data.elements;
+
+        const filteredPlayers = allPlayersRaw.filter(
+          (p) => parseFloat(p.selected_by_percent) > 0.5
+        );
+
+        const computedAverages = calculateAverages(allPlayersRaw);
+        setAverages(computedAverages);
+
+        const totalPointsArr = filteredPlayers.map((p) => p.total_points);
+        const gameWeekPointsArr = allPlayersRaw.map((p) => p.event_points);
+        const bonusPointsArr = allPlayersRaw.map((p) => p.bonus);
+        const formArr = filteredPlayers.map((p) => parseFloat(p.form));
+        const ictIndexArr = filteredPlayers.map((p) => parseFloat(p.ict_index));
+        const selectedByPercentArr = filteredPlayers
+          .map((p) => parseFloat(p.selected_by_percent))
+          .filter((n) => !isNaN(n));
 
         const playerData = data.elements.find((p: any) => p.id === Number(id));
         if (playerData) {
@@ -49,16 +86,38 @@ const PlayerProfile = () => {
             value: playerData.now_cost / 10,
             stats: playerData,
             photo: undefined,
-            team_code: undefined
+            team_code: undefined,
+          };
+
+          const percentiles = {
+            totalPoints: calculatePercentile(
+              totalPointsArr,
+              playerData.total_points
+            ),
+            gameWeekPoints: calculatePercentile(
+              gameWeekPointsArr,
+              playerData.event_points
+            ),
+            bonusPoints: calculatePercentile(bonusPointsArr, playerData.bonus),
+            form: calculatePercentile(formArr, parseFloat(playerData.form)),
+            ictIndex: calculatePercentile(
+              ictIndexArr,
+              parseFloat(playerData.ict_index)
+            ),
+            selectedByPercent: calculatePercentile(
+              selectedByPercentArr,
+              parseFloat(playerData.selected_by_percent) || 0
+            ),
           };
 
           const pointsData: PointsFormData = {
             totalPoints: playerData.total_points,
             gameWeekPoints: playerData.event_points,
             bonusPoints: playerData.bonus,
-            form: playerData.form,
-            ictIndex: playerData.ict_index,
-            selectedByPercent: playerData.selected_by_percent,
+            form: String(playerData.form),
+            ictIndex: String(playerData.ict_index),
+            selectedByPercent: String(playerData.selected_by_percent || "0"),
+            percentiles,
           };
 
           setPlayer(transformedPlayer);
@@ -73,8 +132,23 @@ const PlayerProfile = () => {
     if (id) fetchPlayerData();
   }, [id]);
 
-  if (!player || !pointsFormData || teamCode === null)
+  if (!player || !pointsFormData || !averages || teamCode === null)
     return <div className="p-8 text-[#38003c]">Loading...</div>;
+
+  const valueEfficiencyRaw =
+    player?.value > 0
+      ? Math.min((pointsFormData?.totalPoints / player?.value) * 10, 100)
+      : 0;
+  const valueEfficiencyDisplay = (valueEfficiencyRaw / 10).toFixed(1);
+  const valueEfficiencyLevel =
+    valueEfficiencyRaw < valueEfficiencyLevels.low.maxLevel
+      ? "low"
+      : valueEfficiencyRaw < valueEfficiencyLevels.moderate.maxLevel
+      ? "moderate"
+      : valueEfficiencyRaw < valueEfficiencyLevels.good.maxLevel
+      ? "good"
+      : "high";
+
 
   const playerImageUrl = getPlayerImage(player.stats.photo);
   const teamBadgeUrl = getTeamBadge(player.stats.team_code);
@@ -92,30 +166,27 @@ const PlayerProfile = () => {
         />
       </Section>
       <div className="mt-8">
-        <Grid className={"items-center"} columns={2}>
-          <Card className={""}>
-            <PointsFormCard
-              totalPoints={pointsFormData.totalPoints}
-              bonusPoints={pointsFormData.bonusPoints}
-              gameWeekPoints={pointsFormData.gameWeekPoints}
-              form={pointsFormData.form}
-              ictIndex={pointsFormData.ictIndex}
-              selectedByPercent={pointsFormData.selectedByPercent}
-              player={player}
-            />
-          </Card>
-          <Card className={""}>
-            <PointsFormCard
-              totalPoints={pointsFormData.totalPoints}
-              bonusPoints={pointsFormData.bonusPoints}
-              gameWeekPoints={pointsFormData.gameWeekPoints}
-              form={pointsFormData.form}
-              ictIndex={pointsFormData.ictIndex}
-              selectedByPercent={pointsFormData.selectedByPercent}
-              player={player}
-            />
-          </Card>
-        </Grid>
+        <Card className={""}>
+          <PointsFormCard
+            totalPoints={pointsFormData.totalPoints}
+            bonusPoints={pointsFormData.bonusPoints}
+            gameWeekPoints={pointsFormData.gameWeekPoints}
+            form={pointsFormData.form}
+            ictIndex={pointsFormData.ictIndex}
+            selectedByPercent={pointsFormData.selectedByPercent}
+            percentiles={pointsFormData.percentiles}
+            player={player}
+            averages={averages} // pass averages here
+          />
+        </Card>
+      </div>
+      <div className="mt-8">
+        <Card className={""}>
+          <ValueEfficiency
+            valueEfficiencyLevel={valueEfficiencyLevel}
+            valueEfficiencyDisplay={valueEfficiencyDisplay}
+          />
+        </Card>
       </div>
     </div>
   );

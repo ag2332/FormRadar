@@ -20,7 +20,7 @@ const PlayerBanner = ({
   player,
   className = "",
 }: PlayerBannerProps) => {
-  const teamColor = TEAM_COLORS[player.team] || "#cccccc";
+  const teamColors = TEAM_COLORS[player.team] || "#cccccc";
 
   return (
     <Section
@@ -59,12 +59,13 @@ const PlayerBanner = ({
         </div>
       </Grid>
 
-      <div
-        className="absolute bottom-0 left-0 w-full h-15 pointer-events-none z-30"
-        style={{
-          background: `${teamColor}`,
-        }}
-      />
+      <div className="absolute bottom-0 left-0 w-full h-15 pointer-events-none z-30 flex">
+        <div
+          style={{ backgroundColor: teamColors.primary }}
+          className="w-full h-full"
+        />
+        
+      </div>
     </Section>
   );
 };
