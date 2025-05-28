@@ -25,7 +25,11 @@ const Header = ({ children, className = "" }: HeaderProps) => {
           "fixed top-0 left-0 right-0 px-12 py-3 flex justify-between items-center bg-white w-full z-100"
         }
       >
-        <div className={`flex items-center gap-2 ${className} ${menuOpen ? "open" : ""}`}>
+        <div
+          className={`flex items-center gap-2 ${className} ${
+            menuOpen ? "open" : ""
+          }`}
+        >
           <a href="/" className="logo">
             <h1 className="text-5xl items-center">Form Radar</h1>
           </a>
@@ -33,6 +37,12 @@ const Header = ({ children, className = "" }: HeaderProps) => {
         </div>
         <div>
           <List />
+        </div>
+        <div className="absolute bottom-0 left-0 w-full h-0.5 pointer-events-none z-30 flex">
+          <div
+            style={{ backgroundColor: "#000000" }}
+            className="w-full h-full"
+          />
         </div>
       </Grid>
     </Section>

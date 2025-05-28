@@ -2,26 +2,33 @@ import React from "react";
 import { valueEfficiencyLevels } from "@/app/utilities/styles";
 import Section from "../Section";
 import Grid from "../atoms/Grid";
+import GaugeChart from "./gauge-chart";
 
 interface ValueEfficiencyProps {
   valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
   valueEfficiencyDisplay: string;
+  valueEfficiencyRaw: number;
+  fullName: string;
 }
 
 const ValueEfficiency: React.FC<ValueEfficiencyProps> = ({
   valueEfficiencyLevel,
   valueEfficiencyDisplay,
+  valueEfficiencyRaw,
+  fullName,
 }) => {
   const levelData = valueEfficiencyLevels[valueEfficiencyLevel];
 
   return (
     <Section>
-      <Grid columns={3} className={"text-3xl"}>
-        <div>
-          <p className="text-xl text-gray-500 mt-1">{levelData.description}</p>
+      <Grid columns={3} className={"text-6xl flex items-center"}>
+        <div className="text-xl text-gray-500 mt-2">
+          <p className="p-2">{fullName}{levelData.description}</p>
+          <p className="p-2">{levelData.recommendation}</p>
         </div>
         <div>
-          <h1 className="font-semibold">Value Efficiency:</h1>
+          <h1 className="font-semibold justify-end">Value Efficiency:</h1>
+
           <span className="">{valueEfficiencyDisplay}/10</span>
           <h5
             className="inline-block ml-2 px-2 py-1 rounded"
@@ -33,7 +40,12 @@ const ValueEfficiency: React.FC<ValueEfficiencyProps> = ({
             {valueEfficiencyLevel}
           </h5>
         </div>
-        <div>needle gauge</div>
+        <div>
+          <GaugeChart
+            valueEfficiencyRaw={valueEfficiencyRaw ?? 0}
+            valueEfficiencyLevel={valueEfficiencyLevel}
+          />
+        </div>
       </Grid>
     </Section>
   );

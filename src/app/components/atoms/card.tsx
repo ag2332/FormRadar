@@ -7,7 +7,7 @@ interface GridProps {
 
 const Card = ({ children, className = "" }: GridProps) => {
 
-  return (<div className={`${className} bg-white rounded-2xl p-8 w-full`}>{children}</div>)
+  return (<div className={`${className} bg-white rounded-2xl p-12 w-full`}>{children}</div>)
 };
 
 export default Card;

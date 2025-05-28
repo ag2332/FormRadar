@@ -87,28 +87,37 @@ export const valueEfficiencyLevels = {
     color: "#991b1b",
     background: "#fee2e2",
     description:
-      "Poor value - This player is considered low value for their price, contributing few points in relation to their market cost. Often a poor return on investment, such players may be overpriced or underperforming and might not justify their spot in your squad unless their form changes significantly.",
+      " is considered low value for their price, offering limited returns relative to their market cost. These players often fail to justify their expense as their contributions to your team’s performance are minimal. Unless there is a clear improvement in form or a change in role, keeping them may restrict your squad’s overall efficiency and potential.",
+    recommendation:
+      "It's generally advisable to avoid or transfer out these players, as they provide poor value for money. Your budget could be better allocated to more cost-effective options that deliver stronger and more consistent returns, helping you optimize overall squad efficiency and maximize points gained per investment.",
     maxLevel: 25,
   },
   moderate: {
     color: "#b45309",
     background: "#fef3c7",
     description:
-      "Moderate value - A moderately efficient pick who offers a fair return in points for their cost. These players are often consistent but not explosive and can serve as dependable options to maintain balance in your squad without overspending.",
+      " is a moderately efficient player who offers a balanced return relative to their price. While they may not produce standout performances regularly, their contributions are steady and provide acceptable value for their cost. These players help maintain squad stability and can act as reliable role players in your overall team structure.",
+    recommendation:
+      "Players in this category provide acceptable value for their cost and can help maintain squad stability without overspending. While not typically game-changers, they are useful budget options for filling necessary roles and supporting star performers. Consider keeping them if they fit your tactical needs, but remain vigilant for opportunities to upgrade to more efficient alternatives.",
     maxLevel: 50,
   },
   good: {
     color: "#15803d",
     background: "#dcfce7",
     description:
-      "Good value - This player provides good value, regularly returning a strong points tally in relation to their market price. These are often the most reliable assets to include in your team, offering a mix of affordability and strong performance.",
-    maxLevel: 75,
+      " delivers good value for money by consistently generating strong returns relative to their price tag. These players represent efficient use of budget, combining affordability with reliable and impactful performances that contribute significantly to your team’s success over the season.",
+    recommendation:
+      "Players at this level are smart investments, offering an excellent balance between cost and output. They should form the backbone of your squad, helping you maximize points without overspending. Prioritize acquiring and retaining such players to build a competitive yet cost-effective team capable of sustained success.",
+    maxLevel: 70,
   },
   high: {
     color: "#1d4ed8",
     background: "#dbeafe",
     description:
-      "Excellent value - An elite performer who provides exceptional returns for their cost. These players are usually underpriced relative to their impact, making them high-priority targets for budget optimization and maximizing team performance.",
+      " is an elite value player who consistently outperforms their cost, delivering exceptional returns and maximizing budget efficiency. These players are rare assets who provide outstanding value for money, often exceeding expectations and enabling you to optimize your squad’s performance while freeing up resources.",
+    recommendation:
+      "Top-tier value players should be your highest priority when building your squad. Their superior cost-effectiveness allows you to invest budget elsewhere while maintaining or increasing your team’s scoring potential. Targeting and retaining these players gives you a strong strategic advantage, enabling optimal squad construction and a higher ceiling for success.",
     maxLevel: 100,
   },
 };
+

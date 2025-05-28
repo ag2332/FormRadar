@@ -64,7 +64,6 @@ const PlayerBanner = ({
           style={{ backgroundColor: teamColors.primary }}
           className="w-full h-full"
         />
-        
       </div>
     </Section>
   );

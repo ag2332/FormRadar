@@ -57,11 +57,16 @@ export function calculateAverages(players: PlayerRawData[]): Averages {
 }
 
 export function calculatePercentile(
-    allValues: number[],
-    playerSelectedByPercent: number
-  ): number {
-    const countLower = allValues.filter(v => v < playerSelectedByPercent).length;
-    const percentile = (countLower / allValues.length) * 100;
-    return +percentile.toFixed(1);
-  }
+  allValues: number[],
+  playerSelectedByPercent: number
+): number {
+  const countLower = allValues.filter(
+    (v) => v < playerSelectedByPercent
+  ).length;
+  const percentile = (countLower / allValues.length) * 100;
+  return +percentile.toFixed(1);
+}
 
+export function getCompletedGameweeks(events: any[]): number {
+  return events.filter((event) => event.finished).length;
+}

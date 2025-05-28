@@ -17,6 +17,7 @@ import {
   calculatePercentile,
   Averages,
   PlayerRawData,
+  getCompletedGameweeks,
 } from "@/app/utilities/fplAverages";
 import ValueEfficiency from "@/app/components/molecules/value-efficiency";
 
@@ -45,6 +46,7 @@ const PlayerProfile = () => {
     null
   );
   const [averages, setAverages] = useState<Averages | null>(null);
+  const [completedGameweeks, setCompletedGameweeks] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPlayerData = async () => {
@@ -57,6 +59,9 @@ const PlayerProfile = () => {
         const filteredPlayers = allPlayersRaw.filter(
           (p) => parseFloat(p.selected_by_percent) > 0.5
         );
+
+        const completedGWs = getCompletedGameweeks(data.events);
+          setCompletedGameweeks(completedGWs);
 
         const computedAverages = calculateAverages(allPlayersRaw);
         setAverages(computedAverages);
@@ -132,13 +137,19 @@ const PlayerProfile = () => {
     if (id) fetchPlayerData();
   }, [id]);
 
-  if (!player || !pointsFormData || !averages || teamCode === null)
+  if (!player || !pointsFormData || !averages || teamCode === null || completedGameweeks === null)
     return <div className="p-8 text-[#38003c]">Loading...</div>;
+
 
   const valueEfficiencyRaw =
     player?.value > 0
-      ? Math.min((pointsFormData?.totalPoints / player?.value) * 10, 100)
+      ? Math.min(((pointsFormData?.totalPoints / completedGameweeks) / player?.value) * 100, 100)
       : 0;
+
+      console.log(valueEfficiencyRaw + " valueEfficiencyRaw");
+      console.log(completedGameweeks + " completedGameweeks");
+      console.log(pointsFormData?.totalPoints + " totalPoints");
+
   const valueEfficiencyDisplay = (valueEfficiencyRaw / 10).toFixed(1);
   const valueEfficiencyLevel =
     valueEfficiencyRaw < valueEfficiencyLevels.low.maxLevel
@@ -148,7 +159,6 @@ const PlayerProfile = () => {
       : valueEfficiencyRaw < valueEfficiencyLevels.good.maxLevel
       ? "good"
       : "high";
-
 
   const playerImageUrl = getPlayerImage(player.stats.photo);
   const teamBadgeUrl = getTeamBadge(player.stats.team_code);
@@ -185,6 +195,8 @@ const PlayerProfile = () => {
           <ValueEfficiency
             valueEfficiencyLevel={valueEfficiencyLevel}
             valueEfficiencyDisplay={valueEfficiencyDisplay}
+            valueEfficiencyRaw={valueEfficiencyRaw}
+            fullName={player.full_name}
           />
         </Card>
       </div>
