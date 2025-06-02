@@ -17,7 +17,7 @@ const Grid = ({ children, className = "", columns = 2 }: GridProps) => {
   }[columns];
 
   return (
-    <div className={`${className} grid gap-2 text-center ${gridStyles}`}>
+    <div className={`${className} grid gap-8 text-center ${gridStyles}`}>
       {children}
     </div>
   );

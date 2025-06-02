@@ -1,16 +1,7 @@
 import Section from "../Section";
 import Grid from "../atoms/Grid";
-import { Player } from "@/app/page";
 import { TEAM_COLORS } from "@/app/utilities/styles";
-
-interface PlayerBannerProps {
-  fullName: string;
-  playerImageUrl: string;
-  teamName: string;
-  teamBadgeUrl: string;
-  player: Player;
-  className?: string;
-}
+import { PlayerBannerProps } from "@/app/utilities/types";
 
 const PlayerBanner = ({
   fullName,

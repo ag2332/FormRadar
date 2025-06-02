@@ -1,4 +1,27 @@
 export interface PlayerRawData {
+  [x: string]: number;
+  threat_rank: any;
+  chance: any;
+  clean_sheets: number;
+  goals_conceded: number;
+  saves: number;
+  minutes: any;
+  starts: number;
+  substitutes_in: number;
+  status: any;
+  yellow_cards: any;
+  red_cards: any;
+  id: number;
+  team: any;
+  element_type: any;
+  first_name: any;
+  second_name: any;
+  now_cost: number;
+  creativity: number;
+  threat: number;
+  goals_scored: number;
+  assists: number;
+  influence: number;
   total_points: number;
   event_points: number;
   bonus: number;

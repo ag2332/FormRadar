@@ -7,16 +7,7 @@ import {
 } from "../../utilities/styles";
 import { Player } from "@/app/page";
 import { useRouter } from "next/navigation";
-
-interface DropDownProps {
-  label: string;
-  items: Player[];
-  onPlayerSelect: (player: Player) => void;
-  backgroundColor: string;
-  borderRadius: string;
-  selectSize: boolean;
-  inputSelect: boolean;
-}
+import { DropDownProps } from "@/app/utilities/types";
 
 const DropDown = ({
   label = "select",

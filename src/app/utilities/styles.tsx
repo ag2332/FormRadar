@@ -84,7 +84,7 @@ export const TEAM_COLORS: Record<
 
 export const valueEfficiencyLevels = {
   low: {
-    color: "#991b1b",
+    color: "#ef4444",
     background: "#fee2e2",
     description:
       " is considered low value for their price, offering limited returns relative to their market cost. These players often fail to justify their expense as their contributions to your team’s performance are minimal. Unless there is a clear improvement in form or a change in role, keeping them may restrict your squad’s overall efficiency and potential.",
@@ -93,7 +93,7 @@ export const valueEfficiencyLevels = {
     maxLevel: 25,
   },
   moderate: {
-    color: "#b45309",
+    color: "#f97316",
     background: "#fef3c7",
     description:
       " is a moderately efficient player who offers a balanced return relative to their price. While they may not produce standout performances regularly, their contributions are steady and provide acceptable value for their cost. These players help maintain squad stability and can act as reliable role players in your overall team structure.",

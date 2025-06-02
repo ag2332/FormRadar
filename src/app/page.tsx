@@ -4,38 +4,7 @@ import { useState, useEffect } from "react";
 import Grid from "@/app/components/atoms/Grid";
 import DropDown from "@/app/components/atoms/dropdown";
 import Section from "./components/Section";
-
-interface FPLPlayer {
-  id: number;
-  first_name: string;
-  second_name: string;
-  team: number;
-  element_type: number;
-  now_cost: number;
-  [key: string]: any;
-}
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-interface Position {
-  id: number;
-  singular_name: string;
-}
-
-export interface Player {
-  photo: any;
-  team_code: any;
-  id: number;
-  name: string;
-  full_name: string;
-  team: string;
-  position: string;
-  value: number;
-  stats: FPLPlayer;
-}
+import { Player, FPLPlayer, Team, Position } from "@/app/utilities/types";
 
 function Home() {
   const [players, setPlayers] = useState<Player[]>([]);

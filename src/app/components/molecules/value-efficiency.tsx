@@ -3,13 +3,7 @@ import { valueEfficiencyLevels } from "@/app/utilities/styles";
 import Section from "../Section";
 import Grid from "../atoms/Grid";
 import GaugeChart from "./gauge-chart";
-
-interface ValueEfficiencyProps {
-  valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
-  valueEfficiencyDisplay: string;
-  valueEfficiencyRaw: number;
-  fullName: string;
-}
+import { ValueEfficiencyProps } from "@/app/utilities/types";
 
 const ValueEfficiency: React.FC<ValueEfficiencyProps> = ({
   valueEfficiencyLevel,
