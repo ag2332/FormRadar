@@ -79,6 +79,10 @@ export function calculateAverages(players: PlayerRawData[]): Averages {
   };
 }
 
+export function getCompletedGameweeks(events: any[]): number {
+  return events.filter((event) => event.finished).length;
+}
+
 export function calculatePercentile(
   allValues: number[],
   playerSelectedByPercent: number
@@ -87,9 +91,15 @@ export function calculatePercentile(
     (v) => v < playerSelectedByPercent
   ).length;
   const percentile = (countLower / allValues.length) * 100;
-  return +percentile.toFixed(1);
+  return parseFloat(percentile.toFixed(1));
 }
 
-export function getCompletedGameweeks(events: any[]): number {
-  return events.filter((event) => event.finished).length;
+export async function allPlayersRaw(): Promise<PlayerRawData[]> {
+  const response = await fetch("/api/fpl");
+  const data = await response.json();
+  return data.elements;
+}
+
+export function filteredPlayers(players: PlayerRawData[], threshold: number): PlayerRawData[] {
+  return players.filter((player) => parseFloat(player.selected_by_percent) > threshold);
 }

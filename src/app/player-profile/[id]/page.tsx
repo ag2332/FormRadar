@@ -25,6 +25,8 @@ import {
   Averages,
   PlayerRawData,
   getCompletedGameweeks,
+  allPlayersRaw,
+  filteredPlayers
 } from "@/app/utilities/fplAverages";
 import ValueEfficiency from "@/app/components/molecules/value-efficiency";
 import Grid from "@/app/components/atoms/Grid";
@@ -99,18 +101,36 @@ const PlayerProfile = () => {
           const gameWeekPointsArr = allPlayersRaw.map((p) => p.event_points);
           const bonusPointsArr = allPlayersRaw.map((p) => p.bonus);
           const formArr = filteredPlayers.map((p) => parseFloat(p.form));
-          const ictIndexArr = filteredPlayers.map((p) =>parseFloat(p.ict_index));
-          const selectedByPercentArr = filteredPlayers.map((p) => parseFloat(p.selected_by_percent)).filter((n) => !isNaN(n));
+          const ictIndexArr = filteredPlayers.map((p) =>
+            parseFloat(p.ict_index)
+          );
+          const selectedByPercentArr = filteredPlayers
+            .map((p) => parseFloat(p.selected_by_percent))
+            .filter((n) => !isNaN(n));
 
           // Calculate percentiles
           const percentiles = {
-            totalPoints: calculatePercentile(totalPointsArr, playerData.total_points),
-            gameWeekPoints: calculatePercentile(gameWeekPointsArr, playerData.event_points),
+            totalPoints: calculatePercentile(
+              totalPointsArr,
+              playerData.total_points
+            ),
+            gameWeekPoints: calculatePercentile(
+              gameWeekPointsArr,
+              playerData.event_points
+            ),
             bonusPoints: calculatePercentile(bonusPointsArr, playerData.bonus),
             form: calculatePercentile(formArr, parseFloat(playerData.form)),
-            ictIndex: calculatePercentile(ictIndexArr, parseFloat(playerData.ict_index)),
-            selectedByPercent: calculatePercentile(selectedByPercentArr, parseFloat(playerData.selected_by_percent) || 0),
+            ictIndex: calculatePercentile(
+              ictIndexArr,
+              parseFloat(playerData.ict_index)
+            ),
+            selectedByPercent: calculatePercentile(
+              selectedByPercentArr,
+              parseFloat(playerData.selected_by_percent) || 0
+            ),
           };
+
+          console.log(totalPointsArr)
 
           //GK Data Calculations
           const saves = playerData.saves;
@@ -122,12 +142,20 @@ const PlayerProfile = () => {
           const insights: PlayerInsights = {
             GkData: {
               saves: playerData.saves,
-              savePercentage: (saves + goalsConceded) > 0 ? +(saves / (saves + goalsConceded) * 100).toFixed(1) : 0,
+              savePercentage:
+                saves + goalsConceded > 0
+                  ? +((saves / (saves + goalsConceded)) * 100).toFixed(1)
+                  : 0,
               cleanSheets: playerData.clean_sheets,
               goalsConceded: playerData.goals_conceded,
               penaltiesSaved: playerData.penalties_saved,
-              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(1),
-              savesPer90: minutesPlayed > 0 ? +(saves / (minutesPlayed / 90)).toFixed(2) : 0,
+              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(
+                1
+              ),
+              savesPer90:
+                minutesPlayed > 0
+                  ? +(saves / (minutesPlayed / 90)).toFixed(2)
+                  : 0,
             } as unknown as GKStatsCardProps,
             playerKeyData: {
               id: playerData.id,
@@ -183,8 +211,7 @@ const PlayerProfile = () => {
               expectedAssists: playerData.expected_assists,
               expectedAssistsPer90: playerData.expected_assists_per_90,
               expectedGoalInvolvements: playerData.expected_goal_involvements,
-              expectedGoalInvolvementsPer90:
-                playerData.expected_goal_involvements_per_90,
+              expectedGoalInvolvementsPer90: playerData.expected_goal_involvements_per_90,
             } as unknown as ATStatsCardProps,
             teamCode: team?.code ?? null,
           };

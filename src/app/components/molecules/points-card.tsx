@@ -1,7 +1,8 @@
 import React from "react";
 import Grid from "../atoms/Grid";
-import Label from "../atoms/label";
 import { PointsFormCardProps } from "@/app/utilities/types";
+import DataContainer from "./DataContainer";
+
 
 const PointsFormCard = ({
   totalPoints,
@@ -14,56 +15,59 @@ const PointsFormCard = ({
   player,
   averages,
 }: PointsFormCardProps) => {
+  console.log(percentiles)
+
+  const dataArray = [
+    {
+      title: "Total Points",
+      data: totalPoints,
+      average: averages.avgTotalPoints.toFixed(1),
+      percentile: percentiles.totalPoints,
+    },
+    {
+      title: "Game Week Points",
+      data: gameWeekPoints,
+      average: averages.avgGameWeekPoints.toFixed(1),
+      percentile: percentiles.gameWeekPoints,
+    },
+    {
+      title: "Bonus Points",
+      data: bonusPoints,
+      average: averages.avgBonusPoints.toFixed(1),
+      percentile: percentiles.bonusPoints,
+    },
+    {
+      title: "Form",
+      data: form,
+      average: averages.avgForm.toFixed(2),
+      percentile: percentiles.form,
+    },
+    {
+      title: "ICT Index",
+      data: ictIndex,
+      average: averages.avgIctIndex.toFixed(1),
+      percentile: percentiles.ictIndex,
+    },
+    {
+      title: "Selected By %",
+      data: selectedByPercent,
+      average: averages.avgSelectedByPercent.toFixed(1),
+      percentile: percentiles.selectedByPercent,
+    },
+  ]
   return (
+
+
     <Grid className="text-5xl" columns={3}>
-      <Label>
-        <h1 className="font-semibold">Total Points:</h1>
-        <div>{totalPoints}</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgTotalPoints.toFixed(1)} | Percentile:
-          {percentiles.totalPoints}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">GW Points:</h1>
-        <div>{gameWeekPoints}</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgGameWeekPoints.toFixed(1)} | Percentile:
-          {percentiles.gameWeekPoints}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Bonus Points:</h1>
-        <div>{bonusPoints}</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgBonusPoints.toFixed(1)} | Percentile:
-          {percentiles.bonusPoints}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Form:</h1>
-        <div>{form}</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgForm.toFixed(2)} | Percentile:
-          {percentiles.form}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">ICT Index:</h1>
-        <div>{ictIndex}</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgIctIndex.toFixed(2)} | Percentile:
-          {percentiles.ictIndex}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Selected By:</h1>
-        <div>{selectedByPercent}%</div>
-        <div className="text-xl text-gray-500">
-          Average: {averages.avgSelectedByPercent.toFixed(1)} | Percentile:
-          {percentiles.selectedByPercent}%
-        </div>
-      </Label>
+      {dataArray.map((item, index) => (
+        <DataContainer
+          key={index}
+          title={item.title}
+          data={item.data}
+          average={item.average}
+          percentile={item.percentile}
+        />
+      ))}
     </Grid>
   );
 };
