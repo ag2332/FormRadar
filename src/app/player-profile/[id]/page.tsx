@@ -32,8 +32,6 @@ import ICTCard from "@/app/components/molecules/ICT-card";
 interface PlayerInsights {
   playerKeyData: Player;
   teamCode: number;
-  DfData: DFStatsCardProps;
-  GkData: GKStatsCardProps;
 }
 
 const PlayerProfile = () => {
@@ -62,23 +60,8 @@ const PlayerProfile = () => {
             (e: any) => e.id === playerData.element_type
           );
 
-          //GK Data Calculations
-          const saves = playerData.saves;
-          const goalsConceded = playerData.goals_conceded;
-          const expectedGoalsConceded = playerData.expected_goals_conceded || 0;
-          const minutesPlayed = playerData.minutes;
-
           // Assemble all insights into a single state object
           const insights: PlayerInsights = {
-            GkData: {
-              saves: playerData.saves,
-              savePercentage: saves + goalsConceded > 0 ? +((saves / (saves + goalsConceded)) * 100).toFixed(1) : 0,
-              cleanSheets: playerData.clean_sheets,
-              goalsConceded: playerData.goals_conceded,
-              penaltiesSaved: playerData.penalties_saved,
-              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(1),
-              savesPer90: minutesPlayed > 0 ? +(saves / (minutesPlayed / 90)).toFixed(2) : 0,
-            } as unknown as GKStatsCardProps,
             playerKeyData: {
               id: playerData.id,
               name: `${playerData.first_name} ${playerData.second_name}`,
@@ -107,7 +90,7 @@ const PlayerProfile = () => {
   if (!playerInsights || completedGameweeks === null)
     return <div className="p-8 text-[#38003c]">Loading...</div>;
 
-  const { playerKeyData, DfData, GkData, teamCode } =
+  const { playerKeyData, teamCode } =
     playerInsights;
 
   const valueEfficiencyRaw =
@@ -182,6 +165,16 @@ const PlayerProfile = () => {
     { title: "Blocks", field: "blocks", source: "all" },
   ]
 
+  const GKCardData = [
+    { title: "Saves", field: "saves", source: "all" },
+    { title: "Save %", field: "save_percentage", source: "computed" },
+    { title: "Clean Sheets", field: "clean_sheets", source: "all" },
+    { title: "Goals Conceded", field: "goals_conceded", source: "all" },
+    { title: "Penalties Saved", field: "penalties_saved", source: "all" },
+    { title: "Goals Prevented", field: "goals_prevented", source: "computed" },
+    { title: "Saves Per 90", field: "saves_per_90", source: "computed" },
+  ]
+
   return (
     <div className="px-8 mt-40">
       <Section>
@@ -217,12 +210,10 @@ const PlayerProfile = () => {
           {playerKeyData.position === "Goalkeeper" && (
             <>
               <Card className={""}>
-                <GKStatsCard {...GkData} />
+                <GKStatsCard data={GKCardData} player={thisPlayer}/>
               </Card>
               <Card className={""}>
-                <ReliabilityStatsCard
-                  data={reliabilityCardData} player={thisPlayer}
-                />
+                <ReliabilityStatsCard data={reliabilityCardData} player={thisPlayer}/>
               </Card>
               <Card className={""}>
                 <ICTCard data={ICTCardData} player={thisPlayer} />

@@ -1,77 +1,110 @@
-import React from "react";
-import Label from "../atoms/label";
-import { GKStatsCardProps } from "@/app/utilities/types";
+import React, { useState, useEffect } from "react";
+import { ComponentProps } from "@/app/utilities/types";
+import DataContainer from "./DataContainer";
+import {
+  filteredPlayers,
+  allPlayersRaw,
+  PlayerRawData,
+} from "@/app/utilities/fplAverages";
 
-const GKStatsCard = ({
-  saves,
-  savePercentage,
-  cleanSheets,
-  goalsConceded,
-  penaltiesSaved,
-  goalsPrevented,
-  savesPer90,
-}: GKStatsCardProps) => {
+const GKStatsCard = ({ data, player }: ComponentProps) => {
+  const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);
+  const [filteredPlayersArr, setFilteredPlayersArr] = useState<PlayerRawData[]>(
+    []
+  );
+
+  // Compute derived stats locally
+  const calculatedPlayer = (() => {
+    const { saves, goals_conceded, expected_goals_conceded, minutes } = player;
+
+    const save_percentage =
+      saves + goals_conceded > 0
+        ? +((saves / (saves + goals_conceded)) * 100).toFixed(1)
+        : 0;
+
+    const goals_prevented = +(expected_goals_conceded - goals_conceded).toFixed(
+      1
+    );
+
+    const saves_per_90 = minutes > 0 ? +(saves / (minutes / 90)).toFixed(2) : 0;
+
+    return {
+      ...player,
+      save_percentage,
+      goals_prevented,
+      saves_per_90,
+    };
+  })();
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const awaitAllPlayersRaw = await allPlayersRaw();
+      const filteredPlayersData = await filteredPlayers();
+      setAllPlayers(awaitAllPlayersRaw);
+      setFilteredPlayersArr(filteredPlayersData);
+    };
+
+    fetchPlayers();
+  }, []);
+
   return (
     <>
-    <h1 className="text-7xl font-semibold">Goalkeeper Stats Card</h1>
-    <div className="text-5xl">
-      <Label>
-        <h1 className="font-semibold">Total Saves:</h1>
-        <div>{saves}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Save Percentage Rate:</h1>
-        <div>{savePercentage}%</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Clean Sheets:</h1>
-        <div>{cleanSheets}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Goals Conceded:</h1>
-        <div>{goalsConceded}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Penalties Saved:</h1>
-        <div>{penaltiesSaved}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Goals Prevented:</h1>
-        <div>{goalsPrevented}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Saves/90</h1>
-        <div>{savesPer90}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-    </div>
+      <h1 className="text-7xl font-semibold">Goalkeeping</h1>
+      {data.map(
+        (
+          item: {
+            title: string;
+            field: string;
+            source: "allPlayers" | "filteredPlayersArr";
+          },
+          index: number
+        ) => {
+          const sourceArray =
+            item.source === "allPlayers" ? allPlayers : filteredPlayersArr;
+
+          const data: number[] = sourceArray
+            .map((p) => {
+              const value =
+                item.field in p
+                  ? p[item.field as keyof PlayerRawData]
+                  : ((): number => {
+                      if (item.field === "save_percentage") {
+                        const saves = p.saves || 0;
+                        const conceded = p.goals_conceded || 0;
+                        return saves + conceded > 0
+                          ? +((saves / (saves + conceded)) * 100).toFixed(1)
+                          : 0;
+                      }
+                      if (item.field === "goals_prevented") {
+                        return +(
+                          (p.expected_goals_conceded ?? 0) -
+                          (p.goals_conceded ?? 0)
+                        ).toFixed(1);
+                      }
+                      if (item.field === "saves_per_90") {
+                        const mins = p.minutes || 0;
+                        return mins > 0
+                          ? +(p.saves / (mins / 90)).toFixed(2)
+                          : 0;
+                      }
+                      return NaN;
+                    })();
+
+              return parseFloat(value as unknown as string);
+            })
+            .filter((n) => !isNaN(n));
+
+          return (
+            <DataContainer
+              key={index}
+              title={item.title}
+              field={item.field}
+              player={calculatedPlayer}
+              data={data}
+            />
+          );
+        }
+      )}
     </>
   );
 };
