@@ -1,17 +1,12 @@
-import React from "react";
-import Label from "../atoms/label";
-import { ReliabilityStatsCardProps } from "@/app/utilities/types";
-import { Average } from "next/font/google";
+import React, { useEffect, useState } from "react";
+import { ComponentProps } from "@/app/utilities/types";
+import { PlayerRawData, allPlayersRaw, filteredPlayers } from "@/app/utilities/fplAverages";
+import DataContainer from "./DataContainer";
 
 const ReliabilityStatsCard = ({
-  minutesPlayed,
-  starts,
-  subAppearances,
-  status,
-  yellowCards,
-  redCards,
-  selectedByPercent,
-}: ReliabilityStatsCardProps) => {
+  data,
+  player,
+}: ComponentProps) => {
   const getPlayerStatusLabel = (status: string): string => {
     const statusMap: { [key: string]: string } = {
       a: "Available",
@@ -25,65 +20,55 @@ const ReliabilityStatsCard = ({
     return statusMap[status] || "Unknown";
   };
 
+  const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);
+  const [filteredPlayersArr, setFilteredPlayersArr] = useState<PlayerRawData[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const awaitAllPlayersRaw = await allPlayersRaw();
+      const filteredPlayersData = await filteredPlayers();
+      setAllPlayers(awaitAllPlayersRaw);
+      setFilteredPlayersArr(filteredPlayersData);
+    };
+
+    fetchPlayers();
+  }, []);
+
   return (
     <>
-      <h1 className="text-7xl font-semibold">Reliability Stats Card</h1>
-      <Label>
-        <h1 className="font-semibold">Minutes Played:</h1>
-        <div>{minutesPlayed}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">No. of Starts:</h1>
-        <div>{starts}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Starts:</h1>
-        <div>{subAppearances}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Status:</h1>
-        <div>{getPlayerStatusLabel(status)}</div>{" "}
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Yellow Cards:</h1>
-        <div>{yellowCards}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Red Cards:</h1>
-        <div>{redCards}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Selected By:</h1>
-        <div>{selectedByPercent}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
+      <h1 className="text-7xl font-semibold">Reliability</h1>
+      {data.map(
+        (
+          item: {
+            title: string;
+            field: string;
+            source: "allPlayers" | "filteredPlayersArr";
+          },
+          index: number
+        ) => {
+          const sourceArray =
+            item.source === "allPlayers" ? allPlayers : filteredPlayersArr;
+          const data: number[] = sourceArray
+            .map((player) =>
+              parseFloat(
+                player[item.field as keyof PlayerRawData] as unknown as string
+              )
+            )
+            .filter((n) => !isNaN(n));
+
+          return (
+            <DataContainer
+              key={index}
+              title={item.title}
+              field={item.field}
+              player={player}
+              data={data}
+            />
+          );
+        }
+      )}
     </>
   );
 };

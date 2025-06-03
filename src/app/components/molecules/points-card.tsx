@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Grid from "../atoms/Grid";
-import { PointsFormCardProps } from "@/app/utilities/types";
+import { ComponentProps } from "@/app/utilities/types";
 import DataContainer from "./DataContainer";
 import {
   filteredPlayers,
   allPlayersRaw,
   PlayerRawData,
 } from "@/app/utilities/fplAverages";
+import Grid from "../atoms/Grid";
 
-const PointsFormCard = ({ data, player }: PointsFormCardProps) => {
+const PointsFormCard = ({ data, player }: ComponentProps) => {
   const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);
   const [filteredPlayersArr, setFilteredPlayersArr] = useState<PlayerRawData[]>(
     []
@@ -45,8 +45,6 @@ const PointsFormCard = ({ data, player }: PointsFormCardProps) => {
               )
             )
             .filter((n) => !isNaN(n));
-
-          console.log(`Data for field "${item.field}":`, data);
 
           return (
             <DataContainer

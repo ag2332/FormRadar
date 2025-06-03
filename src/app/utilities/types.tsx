@@ -5,6 +5,7 @@ export interface FPLPlayer {
   team: number;
   element_type: number;
   now_cost: number;
+  totalPoints?: number;
   [key: string]: any;
 }
 
@@ -49,7 +50,7 @@ export interface PlayerBannerProps {
   className?: string;
 }
 
-export interface PointsFormCardProps {
+export interface ComponentProps {
   data: any[];
   player: any;
 }

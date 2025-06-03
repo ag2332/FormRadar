@@ -1,75 +1,62 @@
-import React from "react";
-import Label from "../atoms/label";
-import { ICTCardProps } from "@/app/utilities/types";
+import React, { useState, useEffect } from "react";
+import { ComponentProps } from "@/app/utilities/types";
+import DataContainer from "./DataContainer";
+import {
+  filteredPlayers,
+  allPlayersRaw,
+  PlayerRawData,
+} from "@/app/utilities/fplAverages";
 
-const ICTCard = ({
-  influence,
-  creativity,
-  threat,
-  ictIndex,
-  goalsScored,
-  assists,
-  threatRank,
-}: ICTCardProps) => {
+const ICTCard = ({ data, player }: ComponentProps) => {
+  const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);
+  const [filteredPlayersArr, setFilteredPlayersArr] = useState<PlayerRawData[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const awaitAllPlayersRaw = await allPlayersRaw();
+      const filteredPlayersData = await filteredPlayers();
+      setAllPlayers(awaitAllPlayersRaw);
+      setFilteredPlayersArr(filteredPlayersData);
+    };
+
+    fetchPlayers();
+  }, []);
+
   return (
     <>
-      <h1 className="text-7xl font-semibold">ICT Index Card</h1>
-      <Label>
-        <h1 className="font-semibold">Threat Rank:</h1>
-        <div>{threatRank}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Goals Scored:</h1>
-        <div>{goalsScored}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Assists</h1>
-        <div>{assists}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">ICT Index:</h1>
-        <div>{ictIndex}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Influence:</h1>
-        <div>{influence}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Creativity:</h1>
-        <div>{creativity}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
-      <Label>
-        <h1 className="font-semibold">Threat:</h1>
-        <div>{threat}</div>
-        <div className="text-xl text-gray-500">
-          Average: {} | Percentile:
-          {}%
-        </div>
-      </Label>
+      <h1 className="text-7xl font-semibold">ICT</h1>
+      {data.map(
+        (
+          item: {
+            title: string;
+            field: string;
+            source: "allPlayers" | "filteredPlayersArr";
+          },
+          index: number
+        ) => {
+          const sourceArray =
+            item.source === "allPlayers" ? allPlayers : filteredPlayersArr;
+          const data: number[] = sourceArray
+            .map((player) =>
+              parseFloat(
+                player[item.field as keyof PlayerRawData] as unknown as string
+              )
+            )
+            .filter((n) => !isNaN(n));
+
+          return (
+            <DataContainer
+              key={index}
+              title={item.title}
+              field={item.field}
+              player={player}
+              data={data}
+            />
+          );
+        }
+      )}
     </>
   );
 };
