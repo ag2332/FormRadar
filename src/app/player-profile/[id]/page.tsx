@@ -31,6 +31,7 @@ import ATStatsCard from "@/app/components/molecules/AT-stats-card";
 import DFStatsCard from "@/app/components/molecules/DF-stats-card";
 import GKStatsCard from "@/app/components/molecules/GK-stats-card";
 import ICTCard from "@/app/components/molecules/ICT-card";
+import { data } from "motion/react-client";
 
 interface PointsFormData {
   totalPoints: number;
@@ -65,6 +66,7 @@ const PlayerProfile = () => {
   const [playerInsights, setPlayerInsights] = useState<PlayerInsights | null>(
     null
   );
+  const [thisPlayer, setThisPlayer] = useState<any | null>(null);
   const [completedGameweeks, setCompletedGameweeks] = useState<number | null>(
     null
   );
@@ -80,6 +82,9 @@ const PlayerProfile = () => {
         const allPlayers = await allPlayersRaw();
 
         const playerData = allPlayers.find((p) => p.id === Number(id));
+
+        setThisPlayer(playerData);
+
         if (playerData) {
           const team = data.teams.find((t: any) => t.id === playerData.team);
           const position = data.element_types.find(
@@ -96,12 +101,20 @@ const PlayerProfile = () => {
           const insights: PlayerInsights = {
             GkData: {
               saves: playerData.saves,
-              savePercentage: saves + goalsConceded > 0 ? +((saves / (saves + goalsConceded)) * 100).toFixed(1) : 0,
+              savePercentage:
+                saves + goalsConceded > 0
+                  ? +((saves / (saves + goalsConceded)) * 100).toFixed(1)
+                  : 0,
               cleanSheets: playerData.clean_sheets,
               goalsConceded: playerData.goals_conceded,
               penaltiesSaved: playerData.penalties_saved,
-              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(1),
-              savesPer90: minutesPlayed > 0 ? +(saves / (minutesPlayed / 90)).toFixed(2) : 0,
+              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(
+                1
+              ),
+              savesPer90:
+                minutesPlayed > 0
+                  ? +(saves / (minutesPlayed / 90)).toFixed(2)
+                  : 0,
             } as unknown as GKStatsCardProps,
             playerKeyData: {
               id: playerData.id,
@@ -156,7 +169,8 @@ const PlayerProfile = () => {
               expectedAssists: playerData.expected_assists,
               expectedAssistsPer90: playerData.expected_assists_per_90,
               expectedGoalInvolvements: playerData.expected_goal_involvements,
-              expectedGoalInvolvementsPer90: playerData.expected_goal_involvements_per_90,
+              expectedGoalInvolvementsPer90:
+                playerData.expected_goal_involvements_per_90,
             } as unknown as ATStatsCardProps,
             teamCode: team?.code ?? null,
           };
@@ -208,6 +222,16 @@ const PlayerProfile = () => {
   const playerImageUrl = getPlayerImage(playerKeyData.stats.photo);
   const teamBadgeUrl = getTeamBadge(teamCode);
 
+  const pointsCardData = [
+    { title: "Total Points", field: "total_points", source: "filtered" },
+    { title: "Game Week Points", field: "event_points", source: "all" },
+    { title: "Bonus Points", field: "bonus", source: "all" },
+    { title: "Form", field: "form", source: "filtered" },
+    { title: "ICT Index", field: "ict_index", source: "filtered" },
+    { title: "Selected By %", field: "selected_by_percent", source: "filtered" },
+  ];
+
+
   return (
     <div className="px-8 mt-40">
       <Section>
@@ -223,10 +247,7 @@ const PlayerProfile = () => {
 
       <div className="mt-8">
         <Card className={""}>
-          <PointsFormCard
-            {...pointsData}
-            player={playerKeyData}
-          />
+          <PointsFormCard data={pointsCardData} player={thisPlayer} />
         </Card>
       </div>
 

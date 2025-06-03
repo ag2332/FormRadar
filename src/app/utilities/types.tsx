@@ -50,13 +50,8 @@ export interface PlayerBannerProps {
 }
 
 export interface PointsFormCardProps {
-  totalPoints: number;
-  form: string;
-  ictIndex: string;
-  selectedByPercent: string;
-  gameWeekPoints: number;
-  bonusPoints: number;
-  player: Player;
+  data: any[];
+  player: any;
 }
 
 export interface ValueEfficiencyProps {

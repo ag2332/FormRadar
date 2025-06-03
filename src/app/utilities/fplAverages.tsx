@@ -38,8 +38,6 @@ export function calculateAverage(values: number[]): number {
   return isNaN(rounded) ? 0 : rounded;
 }
 
-
-
 export function getCompletedGameweeks(events: any[]): number {
   return events.filter((event) => event.finished).length;
 }
@@ -63,7 +61,5 @@ export async function allPlayersRaw(): Promise<PlayerRawData[]> {
 
 export async function filteredPlayers(): Promise<PlayerRawData[]> {
   const allPlayers = await allPlayersRaw();
-  return allPlayers.filter(
-    (p) => p.selected_by_percent > 0.5
-  );
+  return allPlayers.filter((p) => p.selected_by_percent > 0.5);
 }

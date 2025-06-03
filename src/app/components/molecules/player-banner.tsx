@@ -14,7 +14,7 @@ const PlayerBanner = ({
   const teamColors = TEAM_COLORS[player.team] || "#cccccc";
 
   return (
-    <Section
+    <div
       className={`relative bg-white rounded-2xl text-3xl overflow-hidden ${className}`}
     >
       <Grid
@@ -56,7 +56,7 @@ const PlayerBanner = ({
           className="w-full h-full"
         />
       </div>
-    </Section>
+    </div>
   );
 };
 
