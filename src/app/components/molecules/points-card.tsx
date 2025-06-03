@@ -41,44 +41,42 @@ const PointsFormCard = ({
   const ictIndexArr = dataFilter(filteredPlayersArr, "ict_index");
   const selectedByPercentArr = dataFilter(filteredPlayersArr, "selected_by_percent");
 
-  console.log(calculatePercentile)
-
   const dataArray = [
     {
       title: "Total Points",
       data: totalPoints,
-      average: calculateAverage(totalPointsArr),
-      percentile: parseFloat(calculatePercentile(totalPointsArr, totalPoints).toFixed(1)),
+      dataAverage: calculateAverage(totalPointsArr),
+      dataPercentile: parseFloat(calculatePercentile(totalPointsArr, totalPoints).toFixed(1)),
     },
     {
       title: "Game Week Points",
       data: gameWeekPoints,
-      average: calculateAverage(gameWeekPointsArr),
-      percentile: parseFloat(calculatePercentile(gameWeekPointsArr, gameWeekPoints).toFixed(1)),
+      dataAverage: calculateAverage(gameWeekPointsArr),
+      dataPercentile: parseFloat(calculatePercentile(gameWeekPointsArr, gameWeekPoints).toFixed(1)),
     },
     {
       title: "Bonus Points",
       data: bonusPoints,
-      average: calculateAverage(bonusPointsArr),
-      percentile: parseFloat(calculatePercentile(bonusPointsArr, bonusPoints).toFixed(1)),
+      dataAverage: calculateAverage(bonusPointsArr),
+      dataPercentile: parseFloat(calculatePercentile(bonusPointsArr, bonusPoints).toFixed(1)),
     },
     {
       title: "Form",
       data: form,
-      average: calculateAverage(formArr),
-      percentile: parseFloat(calculatePercentile(formArr, parseFloat(form)).toFixed(1)),
+      dataAverage: calculateAverage(formArr),
+      dataPercentile: parseFloat(calculatePercentile(formArr, parseFloat(form)).toFixed(1)),
     },
     {
       title: "ICT Index",
       data: ictIndex,
-      average: calculateAverage(ictIndexArr),
-      percentile: parseFloat(calculatePercentile(ictIndexArr, parseFloat(ictIndex)).toFixed(1)),
+      dataAverage: calculateAverage(ictIndexArr),
+      dataPercentile: parseFloat(calculatePercentile(ictIndexArr, parseFloat(ictIndex)).toFixed(1)),
     },
     {
       title: "Selected By %",
       data: selectedByPercent,
-      average: calculateAverage(selectedByPercentArr),
-      percentile: parseFloat(calculatePercentile(selectedByPercentArr, parseFloat(selectedByPercent) || 0).toFixed(1)),
+      dataAverage: calculateAverage(selectedByPercentArr),
+      dataPercentile: parseFloat(calculatePercentile(selectedByPercentArr, parseFloat(selectedByPercent) || 0).toFixed(1)),
     },
   ]
 
@@ -89,8 +87,8 @@ const PointsFormCard = ({
           key={index}
           title={item.title}
           data={item.data}
-          average={item.average}
-          percentile={item.percentile}
+          dataAverage={item.dataAverage}
+          dataPercentile={item.dataPercentile}
         />
       ))}
     </Grid>
