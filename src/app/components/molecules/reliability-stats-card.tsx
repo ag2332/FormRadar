@@ -27,6 +27,7 @@ const ReliabilityStatsCard = ({
 
   return (
     <>
+      <h1 className="text-7xl font-semibold">Reliability Stats Card</h1>
       <Label>
         <h1 className="font-semibold">Minutes Played:</h1>
         <div>{minutesPlayed}</div>

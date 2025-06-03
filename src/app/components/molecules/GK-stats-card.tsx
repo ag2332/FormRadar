@@ -12,6 +12,8 @@ const GKStatsCard = ({
   savesPer90,
 }: GKStatsCardProps) => {
   return (
+    <>
+    <h1 className="text-7xl font-semibold">Goalkeeper Stats Card</h1>
     <div className="text-5xl">
       <Label>
         <h1 className="font-semibold">Total Saves:</h1>
@@ -70,6 +72,7 @@ const GKStatsCard = ({
         </div>
       </Label>
     </div>
+    </>
   );
 };
 

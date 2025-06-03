@@ -3,16 +3,17 @@ import Label from "../atoms/label";
 import { ATStatsCardProps } from "@/app/utilities/types";
 
 const ATStatsCard = ({
-    numberOfGamesStarted,
-              expectedGoals,
-              expectedGoalsPer90,
-              expectedAssists,
-              expectedAssistsPer90,
-              expectedGoalInvolvements,
-              expectedGoalInvolvementsPer90,
+  numberOfGamesStarted,
+  expectedGoals,
+  expectedGoalsPer90,
+  expectedAssists,
+  expectedAssistsPer90,
+  expectedGoalInvolvements,
+  expectedGoalInvolvementsPer90,
 }: ATStatsCardProps) => {
   return (
     <>
+      <h1 className="text-7xl font-semibold">Attacking Stats Card</h1>
       <Label>
         <h1 className="font-semibold">No. of Games Started:</h1>
         <div>{numberOfGamesStarted}</div>

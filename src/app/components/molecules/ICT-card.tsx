@@ -13,6 +13,7 @@ const ICTCard = ({
 }: ICTCardProps) => {
   return (
     <>
+      <h1 className="text-7xl font-semibold">ICT Index Card</h1>
       <Label>
         <h1 className="font-semibold">Threat Rank:</h1>
         <div>{threatRank}</div>

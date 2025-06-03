@@ -13,6 +13,7 @@ const DFStatsCard = ({
 }: DFStatsCardProps) => {
   return (
     <>
+      <h1 className="text-7xl font-semibold">Defensive Stats Card</h1>
       <Label>
         <h1 className="font-semibold">Clean Sheets:</h1>
         <div>{cleanSheets}</div>

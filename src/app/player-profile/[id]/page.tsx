@@ -20,13 +20,9 @@ import {
   valueEfficiencyLevels,
 } from "@/app/utilities/styles";
 import {
-  calculateAverages,
-  calculatePercentile,
-  Averages,
-  PlayerRawData,
   getCompletedGameweeks,
   allPlayersRaw,
-  filteredPlayers
+  filteredPlayers,
 } from "@/app/utilities/fplAverages";
 import ValueEfficiency from "@/app/components/molecules/value-efficiency";
 import Grid from "@/app/components/atoms/Grid";
@@ -69,7 +65,6 @@ const PlayerProfile = () => {
   const [playerInsights, setPlayerInsights] = useState<PlayerInsights | null>(
     null
   );
-  const [averages, setAverages] = useState<Averages | null>(null);
   const [completedGameweeks, setCompletedGameweeks] = useState<number | null>(
     null
   );
@@ -80,57 +75,16 @@ const PlayerProfile = () => {
         const res = await fetch("/api/fpl");
         const data = await res.json();
 
-        const allPlayersRaw: PlayerRawData[] = data.elements;
-
-        const filteredPlayers = allPlayersRaw.filter(
-          (p) => parseFloat(p.selected_by_percent) > 0.5
-        );
-
         setCompletedGameweeks(getCompletedGameweeks(data.events));
-        setAverages(calculateAverages(allPlayersRaw));
 
-        const playerData = allPlayersRaw.find((p) => p.id === Number(id));
+        const allPlayers = await allPlayersRaw();
+
+        const playerData = allPlayers.find((p) => p.id === Number(id));
         if (playerData) {
           const team = data.teams.find((t: any) => t.id === playerData.team);
           const position = data.element_types.find(
             (e: any) => e.id === playerData.element_type
           );
-
-          // Collect arrays for percentile calculation
-          const totalPointsArr = filteredPlayers.map((p) => p.total_points);
-          const gameWeekPointsArr = allPlayersRaw.map((p) => p.event_points);
-          const bonusPointsArr = allPlayersRaw.map((p) => p.bonus);
-          const formArr = filteredPlayers.map((p) => parseFloat(p.form));
-          const ictIndexArr = filteredPlayers.map((p) =>
-            parseFloat(p.ict_index)
-          );
-          const selectedByPercentArr = filteredPlayers
-            .map((p) => parseFloat(p.selected_by_percent))
-            .filter((n) => !isNaN(n));
-
-          // Calculate percentiles
-          const percentiles = {
-            totalPoints: calculatePercentile(
-              totalPointsArr,
-              playerData.total_points
-            ),
-            gameWeekPoints: calculatePercentile(
-              gameWeekPointsArr,
-              playerData.event_points
-            ),
-            bonusPoints: calculatePercentile(bonusPointsArr, playerData.bonus),
-            form: calculatePercentile(formArr, parseFloat(playerData.form)),
-            ictIndex: calculatePercentile(
-              ictIndexArr,
-              parseFloat(playerData.ict_index)
-            ),
-            selectedByPercent: calculatePercentile(
-              selectedByPercentArr,
-              parseFloat(playerData.selected_by_percent) || 0
-            ),
-          };
-
-          console.log(totalPointsArr)
 
           //GK Data Calculations
           const saves = playerData.saves;
@@ -142,20 +96,12 @@ const PlayerProfile = () => {
           const insights: PlayerInsights = {
             GkData: {
               saves: playerData.saves,
-              savePercentage:
-                saves + goalsConceded > 0
-                  ? +((saves / (saves + goalsConceded)) * 100).toFixed(1)
-                  : 0,
+              savePercentage: saves + goalsConceded > 0 ? +((saves / (saves + goalsConceded)) * 100).toFixed(1) : 0,
               cleanSheets: playerData.clean_sheets,
               goalsConceded: playerData.goals_conceded,
               penaltiesSaved: playerData.penalties_saved,
-              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(
-                1
-              ),
-              savesPer90:
-                minutesPlayed > 0
-                  ? +(saves / (minutesPlayed / 90)).toFixed(2)
-                  : 0,
+              goalsPrevented: +(expectedGoalsConceded - goalsConceded).toFixed(1),
+              savesPer90: minutesPlayed > 0 ? +(saves / (minutesPlayed / 90)).toFixed(2) : 0,
             } as unknown as GKStatsCardProps,
             playerKeyData: {
               id: playerData.id,
@@ -175,7 +121,6 @@ const PlayerProfile = () => {
               form: String(playerData.form),
               ictIndex: String(playerData.ict_index),
               selectedByPercent: String(playerData.selected_by_percent || "0"),
-              percentiles,
             } as PointsFormData,
             ictData: {
               influence: playerData.influence,
@@ -226,7 +171,7 @@ const PlayerProfile = () => {
     if (id) fetchPlayerData();
   }, [id]);
 
-  if (!playerInsights || !averages || completedGameweeks === null)
+  if (!playerInsights || completedGameweeks === null)
     return <div className="p-8 text-[#38003c]">Loading...</div>;
 
   const {
@@ -281,7 +226,6 @@ const PlayerProfile = () => {
           <PointsFormCard
             {...pointsData}
             player={playerKeyData}
-            averages={averages}
           />
         </Card>
       </div>

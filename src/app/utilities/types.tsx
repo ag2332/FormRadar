@@ -54,25 +54,9 @@ export interface PointsFormCardProps {
   form: string;
   ictIndex: string;
   selectedByPercent: string;
-  percentiles: {
-    totalPoints: number;
-    gameWeekPoints: number;
-    bonusPoints: number;
-    form: number;
-    ictIndex: number;
-    selectedByPercent: number;
-  };
   gameWeekPoints: number;
   bonusPoints: number;
   player: Player;
-  averages: {
-    avgTotalPoints: number;
-    avgGameWeekPoints: number;
-    avgBonusPoints: number;
-    avgForm: number;
-    avgIctIndex: number;
-    avgSelectedByPercent: number;
-  };
 }
 
 export interface ValueEfficiencyProps {
