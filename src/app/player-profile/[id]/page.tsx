@@ -23,6 +23,7 @@ import ATStatsCard from "@/app/components/molecules/AT-stats-card";
 import DFStatsCard from "@/app/components/molecules/DF-stats-card";
 import GKStatsCard from "@/app/components/molecules/GK-stats-card";
 import ICTCard from "@/app/components/molecules/ICT-card";
+import Title from "@/app/components/atoms/title";
 
 interface PlayerInsights {
   playerKeyData: Player;
@@ -124,9 +125,9 @@ const PlayerProfile = () => {
   ];
 
   const ICTCardData = [
-    { title: "Threat Rank", field: "threat_rank", source: "all" },
     { title: "Goals Scored", field: "goals_scored", source: "all" },
     { title: "Assists", field: "assists", source: "all" },
+    { title: "Threat Rank", field: "threat_rank", source: "all" },
     { title: "ICT Index", field: "ict_index", source: "all" },
     { title: "Influence", field: "influence", source: "all" },
     { title: "Creativity", field: "creativity", source: "all" },
@@ -202,13 +203,15 @@ const PlayerProfile = () => {
         />
       </Section>
 
-      <div className="mt-8">
+      <div>
+        <Title className={""} title={"Key Data"}/>
         <Card className={""}>
           <PointsFormCard data={pointsCardData} player={thisPlayer} />
         </Card>
       </div>
 
-      <div className="mt-8">
+      <div>
+      <Title className={""} title={"Statistics"}/>
         <Grid columns={3} className={"text-5xl"}>
           {playerKeyData.position === "Goalkeeper" && (
             <>
@@ -263,7 +266,8 @@ const PlayerProfile = () => {
           )}
         </Grid>
       </div>
-      <Grid columns={2} className="mt-8">
+      <Title className={""} title={"Value Insights"}/>
+      <Grid columns={2} className={""}>
         <Card className={""}>
           <ValueEfficiency
             valueEfficiencyLevel={valueEfficiencyLevel}
