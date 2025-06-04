@@ -3,14 +3,11 @@ import { Chart } from "chart.js";
 import { valueEfficiencyLevels } from "@/app/utilities/styles";
 
 type GaugeChartProps = {
-  valueEfficiencyRaw: number;
-  valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
+  gaugeData: number; // Value from 0–100
+  valueEfficiencyLevel?: string; // Optional, if you want to use it for styling or other purposes
 };
 
-export default function GaugeChart({
-  valueEfficiencyRaw,
-  valueEfficiencyLevel,
-}: GaugeChartProps) {
+export default function GaugeChart({ gaugeData, valueEfficiencyLevel }: GaugeChartProps) {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -21,18 +18,19 @@ export default function GaugeChart({
         const ctx = chartRef.current.getContext("2d");
         if (!ctx) return;
 
-        const backgroundColor =
-          valueEfficiencyLevels[valueEfficiencyLevel]?.color || "#cccccc";
-
         const config: Chart.ChartConfiguration = {
           type: "gauge",
           data: {
             datasets: [
               {
-                data: [100], // Segments add up to 100
-                value: valueEfficiencyRaw,
-                backgroundColor: [backgroundColor],
-
+                data: [25,50,75,100], // Quarter segments (total 100)
+                value: gaugeData, // Directly using the raw value
+                backgroundColor: [
+                  valueEfficiencyLevels.low.color,
+                  valueEfficiencyLevels.moderate.color,
+                  valueEfficiencyLevels.good.color,
+                  valueEfficiencyLevels.high.color,
+                ],
                 borderWidth: 2,
               } as any,
             ],
@@ -75,15 +73,11 @@ export default function GaugeChart({
       const chart = chartInstance.current;
 
       if (chart.data && chart.data.datasets) {
-        (chart.data.datasets[0] as any).value = valueEfficiencyRaw;
+        (chart.data.datasets[0] as any).value = gaugeData;
         chart.update();
       }
     }
-  }, [valueEfficiencyRaw]);
+  }, [gaugeData]);
 
-  return(
-  <div >
-    <canvas ref={chartRef} className="select-none"></canvas>
-  </div>
-  );
+  return <canvas ref={chartRef}></canvas>;
 }

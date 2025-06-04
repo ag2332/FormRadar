@@ -4,12 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Section from "@/app/components/Section";
 import PlayerBanner from "@/app/components/molecules/player-banner";
-import {
-  Player,
-  DFStatsCardProps,
-  ATStatsCardProps,
-  GKStatsCardProps,
-} from "@/app/utilities/types";
+import { Player } from "@/app/utilities/types/types";
 import PointsFormCard from "@/app/components/molecules/points-card";
 import Card from "@/app/components/atoms/card";
 import {
@@ -90,8 +85,7 @@ const PlayerProfile = () => {
   if (!playerInsights || completedGameweeks === null)
     return <div className="p-8 text-[#38003c]">Loading...</div>;
 
-  const { playerKeyData, teamCode } =
-    playerInsights;
+  const { playerKeyData, teamCode } = playerInsights;
 
   const valueEfficiencyRaw =
     playerKeyData.value > 0
@@ -122,7 +116,11 @@ const PlayerProfile = () => {
     { title: "Bonus Points", field: "bonus", source: "all" },
     { title: "Form", field: "form", source: "filtered" },
     { title: "ICT Index", field: "ict_index", source: "filtered" },
-    { title: "Selected By %", field: "selected_by_percent", source: "filtered" },
+    {
+      title: "Selected By %",
+      field: "selected_by_percent",
+      source: "filtered",
+    },
   ];
 
   const ICTCardData = [
@@ -152,18 +150,34 @@ const PlayerProfile = () => {
     { title: "xA", field: "expected_assists", source: "all" },
     { title: "xA Per 90", field: "expected_assists_per_90", source: "all" },
     { title: "xGI", field: "expected_goal_involvements", source: "all" },
-    { title: "xGI Per 90", field: "expected_goal_involvements_per_90", source: "all" },
-  ]
+    {
+      title: "xGI Per 90",
+      field: "expected_goal_involvements_per_90",
+      source: "all",
+    },
+  ];
 
   const DFCardData = [
     { title: "Clean Sheets", field: "clean_sheets", source: "all" },
-    { title: "Clean Sheets Per 90", field: "clean_sheets_per_90", source: "all" },
+    {
+      title: "Clean Sheets Per 90",
+      field: "clean_sheets_per_90",
+      source: "all",
+    },
     { title: "Goals Conceded", field: "goals_conceded", source: "all" },
-    { title: "Goals Conceded Per 90", field: "goals_conceded_per_90", source: "all" },
-    { title: "Expected Goals Conceded", field: "expected_goals_conceded", source: "all" },
+    {
+      title: "Goals Conceded Per 90",
+      field: "goals_conceded_per_90",
+      source: "all",
+    },
+    {
+      title: "Expected Goals Conceded",
+      field: "expected_goals_conceded",
+      source: "all",
+    },
     { title: "Own Goals", field: "own_goals", source: "all" },
     { title: "Blocks", field: "blocks", source: "all" },
-  ]
+  ];
 
   const GKCardData = [
     { title: "Saves", field: "saves", source: "all" },
@@ -173,7 +187,7 @@ const PlayerProfile = () => {
     { title: "Penalties Saved", field: "penalties_saved", source: "all" },
     { title: "Goals Prevented", field: "goals_prevented", source: "computed" },
     { title: "Saves Per 90", field: "saves_per_90", source: "computed" },
-  ]
+  ];
 
   return (
     <div className="px-8 mt-40">
@@ -195,25 +209,17 @@ const PlayerProfile = () => {
       </div>
 
       <div className="mt-8">
-        <Card className={""}>
-          <ValueEfficiency
-            valueEfficiencyLevel={valueEfficiencyLevel}
-            valueEfficiencyDisplay={valueEfficiencyDisplay}
-            valueEfficiencyRaw={valueEfficiencyRaw}
-            fullName={playerKeyData.full_name}
-          />
-        </Card>
-      </div>
-
-      <div className="mt-8">
         <Grid columns={3} className={"text-5xl"}>
           {playerKeyData.position === "Goalkeeper" && (
             <>
               <Card className={""}>
-                <GKStatsCard data={GKCardData} player={thisPlayer}/>
+                <GKStatsCard data={GKCardData} player={thisPlayer} />
               </Card>
               <Card className={""}>
-                <ReliabilityStatsCard data={reliabilityCardData} player={thisPlayer}/>
+                <ReliabilityStatsCard
+                  data={reliabilityCardData}
+                  player={thisPlayer}
+                />
               </Card>
               <Card className={""}>
                 <ICTCard data={ICTCardData} player={thisPlayer} />
@@ -224,10 +230,13 @@ const PlayerProfile = () => {
           {playerKeyData.position === "Defender" && (
             <>
               <Card className={""}>
-                <DFStatsCard data={DFCardData}  player={thisPlayer} />
+                <DFStatsCard data={DFCardData} player={thisPlayer} />
               </Card>
               <Card className={""}>
-                <ReliabilityStatsCard data={reliabilityCardData} player={thisPlayer} />
+                <ReliabilityStatsCard
+                  data={reliabilityCardData}
+                  player={thisPlayer}
+                />
               </Card>
               <Card className={""}>
                 <ICTCard data={ICTCardData} player={thisPlayer} />
@@ -239,10 +248,13 @@ const PlayerProfile = () => {
             playerKeyData.position === "Forward") && (
             <>
               <Card className={""}>
-                <ATStatsCard data={ATCardData} player={thisPlayer}/>
+                <ATStatsCard data={ATCardData} player={thisPlayer} />
               </Card>
               <Card className={""}>
-              <ReliabilityStatsCard data={reliabilityCardData} player={thisPlayer} />
+                <ReliabilityStatsCard
+                  data={reliabilityCardData}
+                  player={thisPlayer}
+                />
               </Card>
               <Card className={""}>
                 <ICTCard data={ICTCardData} player={thisPlayer} />
@@ -251,6 +263,24 @@ const PlayerProfile = () => {
           )}
         </Grid>
       </div>
+      <Grid columns={2} className="mt-8">
+        <Card className={""}>
+          <ValueEfficiency
+            valueEfficiencyLevel={valueEfficiencyLevel}
+            valueEfficiencyDisplay={valueEfficiencyDisplay}
+            valueEfficiencyRaw={valueEfficiencyRaw}
+            fullName={playerKeyData.full_name}
+          />
+        </Card>
+        <Card className={""}>
+          <ValueEfficiency
+            valueEfficiencyLevel={valueEfficiencyLevel}
+            valueEfficiencyDisplay={valueEfficiencyDisplay}
+            valueEfficiencyRaw={valueEfficiencyRaw}
+            fullName={playerKeyData.full_name}
+          />
+        </Card>
+      </Grid>
     </div>
   );
 };

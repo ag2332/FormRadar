@@ -29,7 +29,7 @@ const PlayerBanner = ({
         <div className="justify-center m-0">
           <img src={playerImageUrl} alt={fullName} className="w-73 h-90" />
         </div>
-        <div>
+        <div className="text-4xl">
           <div className="mb-2">
             <h1 className="font-semibold">Team:</h1>
             <div>{player.team}</div>

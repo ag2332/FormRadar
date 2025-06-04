@@ -15,30 +15,34 @@ const ValueEfficiency: React.FC<ValueEfficiencyProps> = ({
 
   return (
     <Section>
-      <Grid columns={3} className={"text-6xl flex items-center"}>
+      <Grid columns={2} className={"text-6xl flex items-center"}>
         <div className="text-xl text-gray-500 mt-2">
-          <p className="p-2">{fullName}{levelData.description}</p>
+          <p className="p-2">
+            {fullName}
+            {levelData.description}
+          </p>
           <p className="p-2">{levelData.recommendation}</p>
         </div>
         <div>
-          <h1 className="font-semibold justify-end">Value Efficiency:</h1>
-
-          <span className="">{valueEfficiencyDisplay}/10</span>
-          <h5
-            className="inline-block ml-2 px-2 py-1 rounded"
-            style={{
-              color: levelData.color,
-              background: levelData.background,
-            }}
-          >
-            {valueEfficiencyLevel}
-          </h5>
-        </div>
-        <div>
-          <GaugeChart
-            valueEfficiencyRaw={valueEfficiencyRaw ?? 0}
-            valueEfficiencyLevel={valueEfficiencyLevel}
-          />
+          <div className="my-10">
+            <h1 className="font-semibold justify-end">Value Efficiency:</h1>
+            <span className="">{valueEfficiencyDisplay}/10</span>
+            <h5
+              className="inline-block ml-2 px-2 py-1 rounded"
+              style={{
+                color: levelData.color,
+                background: levelData.background,
+              }}
+            >
+              {valueEfficiencyLevel}
+            </h5>
+          </div>
+          <div>
+            <GaugeChart
+              gaugeData={valueEfficiencyRaw ?? 0}
+              valueEfficiencyLevel={valueEfficiencyLevel}
+            />
+          </div>
         </div>
       </Grid>
     </Section>

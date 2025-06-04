@@ -108,7 +108,7 @@ export const valueEfficiencyLevels = {
       " delivers good value for money by consistently generating strong returns relative to their price tag. These players represent efficient use of budget, combining affordability with reliable and impactful performances that contribute significantly to your team’s success over the season.",
     recommendation:
       "Players at this level are smart investments, offering an excellent balance between cost and output. They should form the backbone of your squad, helping you maximize points without overspending. Prioritize acquiring and retaining such players to build a competitive yet cost-effective team capable of sustained success.",
-    maxLevel: 70,
+    maxLevel: 75,
   },
   high: {
     color: "#1d4ed8",

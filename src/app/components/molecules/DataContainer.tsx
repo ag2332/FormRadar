@@ -26,9 +26,9 @@ const DataContainer = ({
 
   return (
     <Label className="flex flex-col items-center">
-      {title && <p className="font-semibold text-h1">{title}</p>}
-      <p className="text-3xl">{isNaN(playerValue) ? "NaN" : playerValue}</p>
-      <div className="text-xl text-gray-500 flex gap-4">
+      {title && <p className="font-semibold text-6xl text-h1">{title}</p>}
+      <p className="text-5xl">{isNaN(playerValue) ? "NaN" : playerValue}</p>
+      <div className="text-2xl text-gray-500 flex gap-4">
         <span>Average: {average.toFixed(1)}</span>
         <span>|</span>
         <span>
