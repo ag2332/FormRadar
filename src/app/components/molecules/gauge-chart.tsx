@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { Chart } from "chart.js";
-import { valueEfficiencyLevels } from "@/app/utilities/styles";
+import { dataLevels } from "@/app/utilities/styles";
 
 type GaugeChartProps = {
-  gaugeData: number; // Value from 0–100
-  valueEfficiencyLevel?: string; // Optional, if you want to use it for styling or other purposes
+  gaugeData: number;
+  dataLevel: "low" | "moderate" | "good" | "high";
 };
 
-export default function GaugeChart({ gaugeData, valueEfficiencyLevel }: GaugeChartProps) {
+export default function GaugeChart({ gaugeData, dataLevel }: GaugeChartProps) {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -26,10 +26,10 @@ export default function GaugeChart({ gaugeData, valueEfficiencyLevel }: GaugeCha
                 data: [25,50,75,100], // Quarter segments (total 100)
                 value: gaugeData, // Directly using the raw value
                 backgroundColor: [
-                  valueEfficiencyLevels.low.color,
-                  valueEfficiencyLevels.moderate.color,
-                  valueEfficiencyLevels.good.color,
-                  valueEfficiencyLevels.high.color,
+                  dataLevels.low.color,
+                  dataLevels.moderate.color,
+                  dataLevels.good.color,
+                  dataLevels.high.color,
                 ],
                 borderWidth: 2,
               } as any,

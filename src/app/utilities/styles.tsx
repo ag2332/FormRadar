@@ -82,7 +82,7 @@ export const TEAM_COLORS: Record<
   "Wolves": { primary: "#fdb913", secondary: "#000000", tertiary: "#FFF8E1" }
 };
 
-export const valueEfficiencyLevels = {
+export const dataLevels = {
   low: {
     color: "#ef4444",
     background: "#fee2e2",

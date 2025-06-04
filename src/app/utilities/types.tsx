@@ -55,11 +55,12 @@ export interface ComponentProps {
   player: any;
 }
 
-export interface ValueEfficiencyProps {
-  valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
-  valueEfficiencyDisplay: string;
-  valueEfficiencyRaw: number;
+export interface MetricDataProps {
+  dataLevel: "low" | "moderate" | "good" | "high";
+  dataDisplay: string;
+  dataRaw: number;
   fullName: string;
+  text: string;
 }
 
 export interface DFStatsCardProps {
