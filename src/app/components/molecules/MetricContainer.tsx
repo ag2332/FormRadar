@@ -1,18 +1,14 @@
 import React from "react";
-import Label from "../atoms/label";
-import {
-  calculateAverage,
-  calculatePercentile,
-} from "@/app/utilities/fplAverages";
 import Heading from "../atoms/Heading";
 import Grid from "../atoms/Grid";
 import Section from "../Section";
 import GaugeChart from "./gauge-chart";
-import { title } from "process";
 
 interface MetricContainerProps {
   dataLevel: "low" | "moderate" | "good" | "high";
-  dataDisplay: string;
+  dataDisplay: string | number;
+  dataDisplayAverage: number;
+  dataDisplayHighest: number;
   dataRaw?: number;
   fullName: string;
   text: string;
@@ -28,6 +24,8 @@ interface MetricContainerProps {
 const MetricContainer = ({
   dataLevel,
   dataDisplay,
+  dataDisplayAverage,
+  dataDisplayHighest,
   dataRaw,
   fullName,
   text,
@@ -51,7 +49,7 @@ const MetricContainer = ({
         <div>
           <div className="my-10">
             <Heading text={text} tag="h1" />
-            <span className="">{dataDisplay}/10</span>
+            <span className="">{dataDisplay}</span>
             <h5
               className="inline-block ml-2 px-2 py-1 rounded"
               style={{
@@ -63,7 +61,13 @@ const MetricContainer = ({
             </h5>
           </div>
           <div>
-            <GaugeChart gaugeData={dataRaw ?? 0} dataLevel={dataLevel} />
+            <GaugeChart
+              gaugeData={dataRaw ?? 0}
+              dataLevel={dataLevel}
+              dataDisplay={dataDisplay}
+              dataDisplayAverage={dataDisplayAverage}
+              dataDisplayHighest={dataDisplayHighest}
+            />
           </div>
         </div>
       </Grid>

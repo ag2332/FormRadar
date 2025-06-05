@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ComponentProps } from "@/app/utilities/types";
-import { PlayerRawData, allPlayersRaw, filteredPlayers } from "@/app/utilities/fplAverages";
+import { PlayerRawData, allPlayersRaw, filteredPlayers } from "@/app/utilities/fplData";
 import DataContainer from "./DataContainer";
 
 const ReliabilityStatsCard = ({

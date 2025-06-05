@@ -87,37 +87,44 @@ export const dataLevels = {
     color: "#ef4444",
     background: "#fee2e2",
     description:
-      " is considered low value for their price, offering limited returns relative to their market cost. These players often fail to justify their expense as their contributions to your team’s performance are minimal. Unless there is a clear improvement in form or a change in role, keeping them may restrict your squad’s overall efficiency and potential.",
+      " is considered low value for their price, offering limited returns relative to their market cost. These players often fail to justify their expense as their contributions to your team’s performance are minimal.",
     recommendation:
-      "It's generally advisable to avoid or transfer out these players, as they provide poor value for money. Your budget could be better allocated to more cost-effective options that deliver stronger and more consistent returns, helping you optimize overall squad efficiency and maximize points gained per investment.",
+      "It's generally advisable to avoid or transfer out these players, as they provide poor value for money. Your budget could be better allocated to more cost-effective options that deliver stronger and more consistent.",
     maxLevel: 25,
   },
   moderate: {
     color: "#f97316",
     background: "#fef3c7",
     description:
-      " is a moderately efficient player who offers a balanced return relative to their price. While they may not produce standout performances regularly, their contributions are steady and provide acceptable value for their cost. These players help maintain squad stability and can act as reliable role players in your overall team structure.",
+      " is a moderately efficient player who offers a balanced return relative to their price. While they may not produce standout performances regularly, their contributions are steady and provide acceptable value for their cost.",
     recommendation:
-      "Players in this category provide acceptable value for their cost and can help maintain squad stability without overspending. While not typically game-changers, they are useful budget options for filling necessary roles and supporting star performers. Consider keeping them if they fit your tactical needs, but remain vigilant for opportunities to upgrade to more efficient alternatives.",
+      "Players in this category provide acceptable value for their cost and can help maintain squad stability without overspending. While not typically game-changers, they are useful budget options for filling necessary roles and supporting star performers.",
     maxLevel: 50,
   },
   good: {
     color: "#15803d",
     background: "#dcfce7",
     description:
-      " delivers good value for money by consistently generating strong returns relative to their price tag. These players represent efficient use of budget, combining affordability with reliable and impactful performances that contribute significantly to your team’s success over the season.",
+      " delivers good value for money by consistently generating strong returns relative to their price tag. These players represent efficient use of budget, combining affordability with reliable and impactful performances.",
     recommendation:
-      "Players at this level are smart investments, offering an excellent balance between cost and output. They should form the backbone of your squad, helping you maximize points without overspending. Prioritize acquiring and retaining such players to build a competitive yet cost-effective team capable of sustained success.",
+      "Players at this level are smart investments, offering an excellent balance between cost and output. They should form the backbone of your squad, helping you maximize points without overspending.",
     maxLevel: 75,
   },
   high: {
     color: "#1d4ed8",
     background: "#dbeafe",
     description:
-      " is an elite value player who consistently outperforms their cost, delivering exceptional returns and maximizing budget efficiency. These players are rare assets who provide outstanding value for money, often exceeding expectations and enabling you to optimize your squad’s performance while freeing up resources.",
+      " is an elite value player who consistently outperforms their cost, delivering exceptional returns and maximizing budget efficiency. These players are rare assets who often exceed expectations.",
     recommendation:
-      "Top-tier value players should be your highest priority when building your squad. Their superior cost-effectiveness allows you to invest budget elsewhere while maintaining or increasing your team’s scoring potential. Targeting and retaining these players gives you a strong strategic advantage, enabling optimal squad construction and a higher ceiling for success.",
+      "Top-tier value players should be your highest priority when building your squad. Their superior cost-effectiveness allows you to invest budget elsewhere while maintaining or increasing your team’s scoring potential.",
     maxLevel: 100,
   },
 };
+
+export function getDataLevel(value: number, levels: typeof dataLevels): "low" | "moderate" | "good" | "high" {
+  if (value < levels.low.maxLevel) return "low";
+  if (value < levels.moderate.maxLevel) return "moderate";
+  if (value < levels.good.maxLevel) return "good";
+  return "high";
+}
 

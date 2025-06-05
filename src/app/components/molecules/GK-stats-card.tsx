@@ -5,7 +5,7 @@ import {
   filteredPlayers,
   allPlayersRaw,
   PlayerRawData,
-} from "@/app/utilities/fplAverages";
+} from "@/app/utilities/fplData";
 
 const GKStatsCard = ({ data, player }: ComponentProps) => {
   const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);

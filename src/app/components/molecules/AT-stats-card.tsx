@@ -5,7 +5,7 @@ import {
   filteredPlayers,
   allPlayersRaw,
   PlayerRawData,
-} from "@/app/utilities/fplAverages";
+} from "@/app/utilities/fplData";
 
 const ATStatsCard = ({
   data,

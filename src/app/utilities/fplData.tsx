@@ -38,6 +38,16 @@ export function calculateAverage(values: number[]): number {
   return isNaN(rounded) ? 0 : rounded;
 }
 
+export function calculateHighest(values: number[], lookback: number = 3): number {
+  if (!Array.isArray(values) || values.length === 0) return 0;
+
+  const recentSlice = values.slice(-lookback); // take last N values
+  const highest = Math.max(...recentSlice);
+  const rounded = parseFloat(highest.toFixed(1));
+
+  return isNaN(rounded) ? 0 : rounded;
+}
+
 export function getCompletedGameweeks(events: any[]): number {
   return events.filter((event) => event.finished).length;
 }
@@ -63,3 +73,4 @@ export async function filteredPlayers(): Promise<PlayerRawData[]> {
   const allPlayers = await allPlayersRaw();
   return allPlayers.filter((p) => p.selected_by_percent > 0.5);
 }
+

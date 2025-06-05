@@ -5,7 +5,7 @@ import {
   PlayerRawData,
   allPlayersRaw,
   filteredPlayers,
-} from "@/app/utilities/fplAverages";
+} from "@/app/utilities/fplData";
 
 const DFStatsCard = ({ data, player }: ComponentProps) => {
   const [allPlayers, setAllPlayers] = useState<PlayerRawData[]>([]);

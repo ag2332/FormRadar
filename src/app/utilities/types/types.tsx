@@ -20,6 +20,8 @@ export interface Position {
 }
 
 export interface Player {
+  minutes: number;
+  totalPoints: number;
   photo: any;
   team_code: any;
   id: number;

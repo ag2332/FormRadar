@@ -3,7 +3,7 @@ import Label from "../atoms/label";
 import {
   calculateAverage,
   calculatePercentile,
-} from "@/app/utilities/fplAverages";
+} from "@/app/utilities/fplData";
 
 interface DataContainerProps {
   title: string | null;

@@ -13,7 +13,7 @@ const Title = ({ className = "", title }: TitleProps) => {
     "red",
   ]
   return (
-    <div className={`${className} text-white rounded-2xl p-12 w-full`}>
+    <div className={`${className} text-white rounded-2xl p-6 w-full`}>
       {title && <h1 className="text-8xl font-semibold justify-center text-center">{title}</h1>}
     </div>
   );

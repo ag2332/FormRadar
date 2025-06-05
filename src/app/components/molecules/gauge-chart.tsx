@@ -4,10 +4,13 @@ import { dataLevels } from "@/app/utilities/styles";
 
 type GaugeChartProps = {
   gaugeData: number;
+  dataDisplay: number;
+  dataDisplayAverage: number;
+  dataDisplayHighest: number;
   dataLevel: "low" | "moderate" | "good" | "high";
 };
 
-export default function GaugeChart({ gaugeData, dataLevel }: GaugeChartProps) {
+export default function GaugeChart({ gaugeData, dataLevel, dataDisplay, dataDisplayAverage, dataDisplayHighest }: GaugeChartProps) {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -18,12 +21,14 @@ export default function GaugeChart({ gaugeData, dataLevel }: GaugeChartProps) {
         const ctx = chartRef.current.getContext("2d");
         if (!ctx) return;
 
+        console.log(dataDisplayHighest, " Highest Value:");
+
         const config: Chart.ChartConfiguration = {
-          type: "gauge",
+          type: "doughnut",
           data: {
             datasets: [
               {
-                data: [25,50,75,100], // Quarter segments (total 100)
+                data: [dataDisplay, dataDisplayAverage, dataDisplayHighest,], // Quarter segments (total 100)
                 value: gaugeData, // Directly using the raw value
                 backgroundColor: [
                   dataLevels.low.color,

@@ -5,7 +5,7 @@ import {
   filteredPlayers,
   allPlayersRaw,
   PlayerRawData,
-} from "@/app/utilities/fplAverages";
+} from "@/app/utilities/fplData";
 import Grid from "../atoms/Grid";
 
 const PointsFormCard = ({ data, player }: ComponentProps) => {

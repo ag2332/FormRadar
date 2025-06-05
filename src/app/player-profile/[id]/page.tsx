@@ -11,12 +11,12 @@ import {
   getPlayerImage,
   getTeamBadge,
   dataLevels,
+  getDataLevel,
 } from "@/app/utilities/styles";
 import {
   getCompletedGameweeks,
   allPlayersRaw,
-} from "@/app/utilities/fplAverages";
-import ValueEfficiency from "@/app/components/molecules/value-efficiency";
+} from "@/app/utilities/fplData";
 import Grid from "@/app/components/atoms/Grid";
 import ReliabilityStatsCard from "@/app/components/molecules/reliability-stats-card";
 import ATStatsCard from "@/app/components/molecules/AT-stats-card";
@@ -24,6 +24,7 @@ import DFStatsCard from "@/app/components/molecules/DF-stats-card";
 import GKStatsCard from "@/app/components/molecules/GK-stats-card";
 import ICTCard from "@/app/components/molecules/ICT-card";
 import Title from "@/app/components/atoms/title";
+import MetricCard from "@/app/components/molecules/MetricCard";
 
 interface PlayerInsights {
   playerKeyData: Player;
@@ -33,6 +34,7 @@ interface PlayerInsights {
 const PlayerProfile = () => {
   const { id } = useParams();
   const [playerInsights, setPlayerInsights] = useState<PlayerInsights | null>(null);
+  const [playerSummary, setPlayerSummary] = useState<any | null>(null);
   const [thisPlayer, setThisPlayer] = useState<any | null>(null);
   const [completedGameweeks, setCompletedGameweeks] = useState<number | null>(null);
 
@@ -69,6 +71,7 @@ const PlayerProfile = () => {
               totalPoints: playerData.total_points,
               photo: undefined,
               team_code: undefined,
+              minutes: playerData.minutes || 0,
             } as Player,
             teamCode: team?.code ?? null,
           };
@@ -97,7 +100,7 @@ const PlayerProfile = () => {
     { title: "Bonus Points", field: "bonus", source: "all" },
     { title: "Form", field: "form", source: "filtered" },
     { title: "ICT Index", field: "ict_index", source: "filtered" },
-    { title: "Selected By %", field: "selected_by_percent", source: "filtered"},
+    { title: "Selected By %", field: "selected_by_percent", source: "filtered" },
   ];
 
   const ICTCardData = [
@@ -127,15 +130,31 @@ const PlayerProfile = () => {
     { title: "xA", field: "expected_assists", source: "all" },
     { title: "xA Per 90", field: "expected_assists_per_90", source: "all" },
     { title: "xGI", field: "expected_goal_involvements", source: "all" },
-    { title: "xGI Per 90", field: "expected_goal_involvements_per_90", source: "all" },
+    {
+      title: "xGI Per 90",
+      field: "expected_goal_involvements_per_90",
+      source: "all",
+    },
   ];
 
   const DFCardData = [
     { title: "Clean Sheets", field: "clean_sheets", source: "all" },
-    { title: "Clean Sheets Per 90", field: "clean_sheets_per_90", source: "all" },
+    {
+      title: "Clean Sheets Per 90",
+      field: "clean_sheets_per_90",
+      source: "all",
+    },
     { title: "Goals Conceded", field: "goals_conceded", source: "all" },
-    { title: "Goals Conceded Per 90", field: "goals_conceded_per_90", source: "all" },
-    { title: "Expected Goals Conceded", field: "expected_goals_conceded", source: "all" },
+    {
+      title: "Goals Conceded Per 90",
+      field: "goals_conceded_per_90",
+      source: "all",
+    },
+    {
+      title: "Expected Goals Conceded",
+      field: "expected_goals_conceded",
+      source: "all",
+    },
     { title: "Own Goals", field: "own_goals", source: "all" },
     { title: "Blocks", field: "blocks", source: "all" },
   ];
@@ -150,6 +169,7 @@ const PlayerProfile = () => {
     { title: "Saves Per 90", field: "saves_per_90", source: "computed" },
   ];
 
+  // Value Efficiency
   const valueEfficiencyRaw =
     playerKeyData.value > 0
       ? Math.min(
@@ -159,16 +179,33 @@ const PlayerProfile = () => {
             100
         )
       : 0;
+  const valueEfficiencyDisplay = valueEfficiencyRaw.toFixed(1);
+  const VEdataLevel = getDataLevel(valueEfficiencyRaw, dataLevels);
 
-  const valueEfficiencyDisplay = (valueEfficiencyRaw / 10).toFixed(1);
-  const dataLevel =
-    valueEfficiencyRaw < dataLevels.low.maxLevel
-      ? "low"
-      : valueEfficiencyRaw < dataLevels.moderate.maxLevel
-      ? "moderate"
-      : valueEfficiencyRaw < dataLevels.good.maxLevel
-      ? "good"
-      : "high";
+  //Return On Investment
+  const roiRaw =
+    playerKeyData.value > 0
+      ? playerKeyData.totalPoints / playerKeyData.value
+      : 0;
+  const roiDisplay = roiRaw.toFixed(1);
+  const ROIdataLevel = getDataLevel(roiRaw, dataLevels);
+
+  //points per 90 mins
+  const pp90Raw = playerKeyData.minutes > 0
+  ? (playerKeyData.totalPoints / playerKeyData.minutes) * 90
+  : 0;
+  const pp90Display = pp90Raw.toFixed(1);
+  const PP90dataLevel = getDataLevel(pp90Raw, dataLevels);
+
+  // Price vs Output trend
+  const priceChange = priceHistory.at(-1) - priceHistory[0];
+  const formChange = formHistory.at(-1) - formHistory[0];
+
+  const trendRaw = formChange - priceChange;
+  const trendDisplay = trendRaw.toFixed(1);
+  const dataLevel = getDataLevel(trendRaw, dataLevels);
+
+
 
   return (
     <div className="px-8 mt-40">
@@ -184,14 +221,14 @@ const PlayerProfile = () => {
       </Section>
 
       <div>
-        <Title className={""} title={"Key Data"}/>
+        <Title className={""} title={"Key Data"} />
         <Card className={""}>
           <PointsFormCard data={pointsCardData} player={thisPlayer} />
         </Card>
       </div>
 
       <div>
-      <Title className={""} title={"Statistics"}/>
+        <Title className={""} title={"Statistics"} />
         <Grid columns={3} className={"text-5xl"}>
           {playerKeyData.position === "Goalkeeper" && (
             <>
@@ -246,17 +283,42 @@ const PlayerProfile = () => {
           )}
         </Grid>
       </div>
-      <Title className={""} title={"Value Insights"}/>
+      <Title className={""} title={"Value Insights"} />
       <Grid columns={2} className={""}>
-        <Card className={""}>
-          <ValueEfficiency
-            dataLevel={dataLevel}
-            dataDisplay={valueEfficiencyDisplay}
-            dataRaw={valueEfficiencyRaw}
+        <div>
+          <Card className={""}>
+            <MetricCard
+              dataLevel={VEdataLevel}
+              dataDisplay={parseFloat(valueEfficiencyDisplay)}
+              dataRaw={valueEfficiencyRaw}
+              fullName={playerKeyData.full_name}
+              text={"Value Efficiency"}
+            />
+          </Card>
+          <Card className={""}>
+            <MetricCard
+            dataLevel={PP90dataLevel}
+            dataDisplay={parseFloat(pp90Display)}
+            dataRaw={pp90Raw}
             fullName={playerKeyData.full_name}
-            text={"Value Efficiency"}
+            text={"Points Per 90 mins"}
           />
-        </Card>
+          </Card>
+        </div>
+        <div>
+          <Card className={""}>
+            <MetricCard
+              dataLevel={ROIdataLevel}
+              dataDisplay={parseFloat(roiDisplay)}
+              dataRaw={roiRaw}
+              fullName={playerKeyData.full_name}
+              text={"Return On Investment"}
+            />
+          </Card>
+          <Card className={""}>
+            <MetricCard/>
+          </Card>
+        </div>
       </Grid>
     </div>
   );

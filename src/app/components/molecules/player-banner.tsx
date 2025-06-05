@@ -15,7 +15,7 @@ const PlayerBanner = ({
 
   return (
     <div
-      className={`relative bg-white rounded-2xl text-3xl overflow-hidden ${className}`}
+      className={`relative bg-white rounded-2xl text-3xl overflow-hidden mb-8 ${className}`}
     >
       <Grid
         columns={4}
