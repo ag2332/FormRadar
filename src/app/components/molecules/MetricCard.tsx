@@ -1,6 +1,6 @@
 import React from "react";
 import { dataLevels } from "@/app/utilities/styles";
-import { MetricDataProps } from "@/app/utilities/types";
+import { MetricDataProps } from "@/app/utilities/types/types";
 import MetricContainer from "./MetricContainer";
 import { calculateAverage, calculateHighest } from "@/app/utilities/fplData";
 

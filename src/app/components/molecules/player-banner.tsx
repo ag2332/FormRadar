@@ -1,7 +1,7 @@
 import Section from "../Section";
 import Grid from "../atoms/Grid";
 import { TEAM_COLORS } from "@/app/utilities/styles";
-import { PlayerBannerProps } from "@/app/utilities/types";
+import { PlayerBannerProps } from "@/app/utilities/types/types";
 
 const PlayerBanner = ({
   fullName,

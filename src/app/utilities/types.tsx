@@ -20,8 +20,6 @@ export interface Position {
 }
 
 export interface Player {
-  minutes: number;
-  totalPoints: number;
   photo: any;
   team_code: any;
   id: number;
@@ -57,20 +55,12 @@ export interface ComponentProps {
   player: any;
 }
 
-export interface MetricDataProps{
-  data: number[];
+export interface MetricDataProps {
   dataLevel: "low" | "moderate" | "good" | "high";
   dataDisplay: number;
   dataRaw: number;
   fullName: string;
   text: string;
-}
-
-export interface ValueEfficiencyProps {
-  valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
-  valueEfficiencyDisplay: string;
-  valueEfficiencyRaw: number;
-  fullName: string;
 }
 
 export interface DFStatsCardProps {
