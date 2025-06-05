@@ -58,7 +58,6 @@ export interface ComponentProps {
 }
 
 export interface MetricDataProps{
-  data: number[];
   dataLevel: "low" | "moderate" | "good" | "high";
   dataDisplay: number;
   dataRaw: number;
