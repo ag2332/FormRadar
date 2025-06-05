@@ -21,8 +21,6 @@ export default function GaugeChart({ gaugeData, dataLevel, dataDisplay, dataDisp
         const ctx = chartRef.current.getContext("2d");
         if (!ctx) return;
 
-        console.log(dataDisplayHighest, " Highest Value:");
-
         const config: Chart.ChartConfiguration = {
           type: "doughnut",
           data: {

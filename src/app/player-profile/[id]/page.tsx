@@ -85,6 +85,9 @@ const PlayerProfile = () => {
 
         const elementSummaryRes = await fetch(`/api/element-summary/${id}`);
         const elementSummaryData = await elementSummaryRes.json();
+        console.log("element Summary Data:", elementSummaryData);
+        console.log("fplData:", fplData);
+
 
         if (playerData) {
           const team = fplData.teams.find((t: any) => t.id === playerData.team);
