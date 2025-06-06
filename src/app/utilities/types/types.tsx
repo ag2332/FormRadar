@@ -20,6 +20,8 @@ export interface Position {
 }
 
 export interface Player {
+  goalsScored: any;
+  assists: any;
   minutes: number;
   totalPoints: number;
   photo: any;
@@ -30,6 +32,7 @@ export interface Player {
   team: string;
   position: string;
   value: number;
+  form: number;
   stats: FPLPlayer;
 }
 

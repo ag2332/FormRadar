@@ -110,31 +110,15 @@ export const ICTCardData = [
   { title: "xA", field: "expected_assists", source: "all" },
   { title: "xA Per 90", field: "expected_assists_per_90", source: "all" },
   { title: "xGI", field: "expected_goal_involvements", source: "all" },
-  {
-    title: "xGI Per 90",
-    field: "expected_goal_involvements_per_90",
-    source: "all",
-  },
+  { title: "xGI Per 90", field: "expected_goal_involvements_per_90", source: "all" },
 ];
 
 export const DFCardData = [
   { title: "Clean Sheets", field: "clean_sheets", source: "all" },
-  {
-    title: "Clean Sheets Per 90",
-    field: "clean_sheets_per_90",
-    source: "all",
-  },
+  { title: "Clean Sheets Per 90", field: "clean_sheets_per_90", source: "all" },
   { title: "Goals Conceded", field: "goals_conceded", source: "all" },
-  {
-    title: "Goals Conceded Per 90",
-    field: "goals_conceded_per_90",
-    source: "all",
-  },
-  {
-    title: "Expected Goals Conceded",
-    field: "expected_goals_conceded",
-    source: "all",
-  },
+  { title: "Goals Conceded Per 90", field: "goals_conceded_per_90", source: "all" },
+  { title: "Expected Goals Conceded", field: "expected_goals_conceded", source: "all" },
   { title: "Own Goals", field: "own_goals", source: "all" },
   { title: "Blocks", field: "blocks", source: "all" },
 ];

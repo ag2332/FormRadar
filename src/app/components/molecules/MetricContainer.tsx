@@ -34,18 +34,6 @@ const MetricContainer = ({
   return (
     <Section>
       <Grid columns={2} className={"text-6xl flex items-center"}>
-        <div className="text-xl text-gray-500 mt-2">
-          <Heading
-            text={`${fullName} ${levelData.description}`}
-            tag="p"
-            className="p-2"
-          />
-          <Heading
-            text={`${levelData.recommendation}`}
-            tag="p"
-            className="p-2"
-          />
-        </div>
         <div>
           <div className="my-10">
             <Heading text={text} tag="h1" />
@@ -69,6 +57,18 @@ const MetricContainer = ({
               dataDisplayHighest={dataDisplayHighest}
             />
           </div>
+        </div>
+        <div className="text-xl text-gray-500 mt-2">
+          <Heading
+            text={`${fullName} ${levelData.description}`}
+            tag="p"
+            className="p-2"
+          />
+          <Heading
+            text={`${levelData.recommendation}`}
+            tag="p"
+            className="p-2"
+          />
         </div>
       </Grid>
     </Section>

@@ -27,7 +27,7 @@ const Heading: React.FC<HeadingProps> = ({ text, tag = 'h2', style, className })
 
   const componentClasses = twMerge(baseClasses, styleClasses[style ?? tag], className);
 
-  return <Tag className={componentClasses} dangerouslySetInnerHTML={{ __html: text ?? '' }} />;
+  return <Tag className={`${componentClasses}`} dangerouslySetInnerHTML={{ __html: text ?? '' }} />;
 };
 
 export default Heading;
