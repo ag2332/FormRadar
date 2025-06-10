@@ -23,6 +23,7 @@ import {
   reliabilityCardData,
   ICTCardData,
   calculateAverage,
+  calculateHighest,
 } from "@/app/utilities/fplData";
 import Grid from "@/app/components/atoms/Grid";
 import ReliabilityStatsCard from "@/app/components/molecules/reliability-stats-card";
@@ -161,7 +162,8 @@ const PlayerProfile = () => {
       : 0;
   const valueEfficiencyDisplay = valueEfficiencyRaw.toFixed(1);
   const veDataLevel = getDataLevel(valueEfficiencyRaw, dataLevels);
-
+  const veAverage = calculateAverage([valueEfficiencyRaw]);
+  const veHighest = calculateHighest([valueEfficiencyRaw])
   //Return On Investment
   const roiRaw =
     playerKeyData.value > 0
@@ -372,6 +374,8 @@ const PlayerProfile = () => {
             dataLevel={veDataLevel}
             dataDisplay={parseFloat(valueEfficiencyDisplay)}
             dataRaw={valueEfficiencyRaw}
+            averageResult={veAverage}
+            highestResult={veHighest}
             fullName={playerKeyData.full_name}
             text={"Value Efficiency"}
           />
@@ -381,6 +385,8 @@ const PlayerProfile = () => {
             dataLevel={pp90DataLevel}
             dataDisplay={parseFloat(pp90Display)}
             dataRaw={pp90Raw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Points Per 90 mins"}
           />
@@ -391,6 +397,8 @@ const PlayerProfile = () => {
             dataLevel={roiDataLevel}
             dataDisplay={parseFloat(roiDisplay)}
             dataRaw={roiRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Return On Investment"}
           />
@@ -400,6 +408,8 @@ const PlayerProfile = () => {
             dataLevel={potDataLevel}
             dataDisplay={parseFloat(potDisplay)}
             dataRaw={potRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Price vs Output Trend"}
           />
@@ -412,6 +422,8 @@ const PlayerProfile = () => {
             dataLevel={upliftDataLevel}
             dataDisplay={parseFloat(upliftDisplay)}
             dataRaw={upliftRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Performance Uplift"}
           />
@@ -421,6 +433,8 @@ const PlayerProfile = () => {
             dataLevel={stdDevDataLevel}
             dataDisplay={parseFloat(stdDevDisplay)}
             dataRaw={stdDevRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Consistency Score"}
           />
@@ -431,6 +445,8 @@ const PlayerProfile = () => {
             dataLevel={momentumDataLevel}
             dataDisplay={parseFloat(momentumDisplay)}
             dataRaw={momentumRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Points Momentum"}
           />
@@ -440,6 +456,8 @@ const PlayerProfile = () => {
             dataLevel={explosivenessDataLevel}
             dataDisplay={parseFloat(explosivenessDisplay)}
             dataRaw={explosivenessRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Explosiveness"}
           />
@@ -452,6 +470,8 @@ const PlayerProfile = () => {
             dataLevel={girDataLevel}
             dataDisplay={parseFloat(goalInvolvementDisplay)}
             dataRaw={goalInvolvementRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Goal Involvement Rate"}
           />
@@ -461,6 +481,8 @@ const PlayerProfile = () => {
             dataLevel={differentialDataLevel}
             dataDisplay={parseFloat(differentialDisplay)}
             dataRaw={differentialRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Differential Potential"}
           />
@@ -471,6 +493,8 @@ const PlayerProfile = () => {
             dataLevel={exploitabilityDataLevel}
             dataDisplay={parseFloat(exploitabilityDisplay)}
             dataRaw={exploitabilityRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Exploitbility"}
           />
@@ -480,6 +504,8 @@ const PlayerProfile = () => {
             dataLevel={marketDataLevel}
             dataDisplay={parseFloat(marketDisplay)}
             dataRaw={marketRaw}
+            averageResult={0}
+            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Market Movement"}
           />

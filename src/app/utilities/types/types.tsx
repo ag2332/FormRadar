@@ -63,6 +63,8 @@ export interface ComponentProps {
 export interface MetricDataProps{
   dataLevel: "low" | "moderate" | "good" | "high";
   dataDisplay: number;
+  averageResult: number;
+  highestResult: number;
   dataRaw: number;
   fullName: string;
   text: string;
