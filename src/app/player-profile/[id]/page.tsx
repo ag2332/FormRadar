@@ -150,7 +150,18 @@ const PlayerProfile = () => {
   const playerImageUrl = getPlayerImage(playerKeyData.stats.photo);
   const teamBadgeUrl = getTeamBadge(teamCode);
 
-  const metrics = calculatePlayerMetrics(playerKeyData, thisHistory, completedGameweeks);
+  const allMetrics = allPlayers.map(player => {
+    const playerKeyData = player.keyData;
+    const history = player.history;
+    const completedGameweeks = history.length;
+  
+    const metrics = calculatePlayerMetrics(playerKeyData, history, completedGameweeks);
+  
+    return {
+      id: player.id,
+      ...metrics,
+    };
+  });
 
 
   // Value Efficiency
