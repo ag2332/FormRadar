@@ -30,6 +30,26 @@ export interface PlayerRawData {
   selected_by_percent: number;
 }
 
+export interface ElementRawData {
+  value: number;
+  round: number;
+  form: number;
+  totalPoints: number;
+  minutes: number;
+  bonus: number;
+  threat: number;
+  influence: number;
+  creativity: number;
+  ictIndex: number;
+  wasHome: boolean;
+  opponentTeam: number;
+  transfersIn: number;
+  transfersOut: number;
+  selectedByPercent: string;
+  upcomingFixtures?: any[];
+  difficulty?: number;
+}
+
 export function calculateAverage(values: number[]): number {
   if (!Array.isArray(values) || values.length === 0) return 0;
   const sum = values.reduce((a, b) => a + b, 0);

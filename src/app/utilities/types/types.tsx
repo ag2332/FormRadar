@@ -33,6 +33,7 @@ export interface Player {
   position: string;
   value: number;
   form: number;
+  selected_by_percent: string;
   stats: FPLPlayer;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ComponentProps } from "@/app/utilities/types";
+import { ComponentProps } from "@/app/utilities/types/types";
 import DataContainer from "./DataContainer";
 import {
   filteredPlayers,

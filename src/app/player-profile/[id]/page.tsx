@@ -25,6 +25,7 @@ import {
   calculateAverage,
   calculateHighest,
 } from "@/app/utilities/fplData";
+import { calculatePlayerMetrics } from "@/app/utilities/fplMetrics";
 import Grid from "@/app/components/atoms/Grid";
 import ReliabilityStatsCard from "@/app/components/molecules/reliability-stats-card";
 import ATStatsCard from "@/app/components/molecules/AT-stats-card";
@@ -80,7 +81,6 @@ const PlayerProfile = () => {
 
         const elementSummaryRes = await fetch(`/api/element-summary/${id}`);
         const elementSummaryData = await elementSummaryRes.json();
-        console.log(elementSummaryData, "elementSummaryData");
 
         if (playerData) {
           const team = fplData.teams.find((t: any) => t.id === playerData.team);
@@ -149,6 +149,9 @@ const PlayerProfile = () => {
 
   const playerImageUrl = getPlayerImage(playerKeyData.stats.photo);
   const teamBadgeUrl = getTeamBadge(teamCode);
+
+  const metrics = calculatePlayerMetrics(playerKeyData, thisHistory, completedGameweeks);
+
 
   // Value Efficiency
   const valueEfficiencyRaw =
@@ -385,8 +388,8 @@ const PlayerProfile = () => {
             dataLevel={pp90DataLevel}
             dataDisplay={parseFloat(pp90Display)}
             dataRaw={pp90Raw}
-            averageResult={0}
-            highestResult={0}
+            averageResult={2.3}
+            highestResult={10.1}
             fullName={playerKeyData.full_name}
             text={"Points Per 90 mins"}
           />
