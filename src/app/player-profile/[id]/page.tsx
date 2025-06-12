@@ -163,6 +163,9 @@ const PlayerProfile = () => {
     };
   });
 
+  const valueEfficiencies = allMetrics.map(m => m.valueEfficiency);
+  const avgVE = calculateAverage(valueEfficiencies);
+  const maxVE = Math.max(...valueEfficiencies);
 
   // Value Efficiency
   const valueEfficiencyRaw =
