@@ -104,6 +104,7 @@ const PlayerProfile = () => {
               team_code: undefined,
               minutes: playerData.minutes || 0,
               form: playerData.form || 0,
+              bonus: playerData.bonus || 0,
             } as unknown as Player,
             teamCode: team?.code ?? null,
           };
@@ -150,23 +151,6 @@ const PlayerProfile = () => {
   const playerImageUrl = getPlayerImage(playerKeyData.stats.photo);
   const teamBadgeUrl = getTeamBadge(teamCode);
 
-  const allMetrics = allPlayers.map(player => {
-    const playerKeyData = player.keyData;
-    const history = player.history;
-    const completedGameweeks = history.length;
-  
-    const metrics = calculatePlayerMetrics(playerKeyData, history, completedGameweeks);
-  
-    return {
-      id: player.id,
-      ...metrics,
-    };
-  });
-
-  const valueEfficiencies = allMetrics.map(m => m.valueEfficiency);
-  const avgVE = calculateAverage(valueEfficiencies);
-  const maxVE = Math.max(...valueEfficiencies);
-
   // Value Efficiency
   const valueEfficiencyRaw =
     playerKeyData.value > 0
@@ -179,8 +163,6 @@ const PlayerProfile = () => {
       : 0;
   const valueEfficiencyDisplay = valueEfficiencyRaw.toFixed(1);
   const veDataLevel = getDataLevel(valueEfficiencyRaw, dataLevels);
-  const veAverage = calculateAverage([valueEfficiencyRaw]);
-  const veHighest = calculateHighest([valueEfficiencyRaw])
   //Return On Investment
   const roiRaw =
     playerKeyData.value > 0
@@ -308,6 +290,57 @@ const PlayerProfile = () => {
   const marketDisplay = marketRaw.toFixed(1);
   const marketDataLevel = getDataLevel(marketRaw, dataLevels);
 
+  // Discipline Risk
+  const disciplineRiskRaw =
+    playerKeyData.minutes > 0
+      ? (playerKeyData.bonus / playerKeyData.minutes) * 1000
+      : 0;
+  const disciplineRiskDisplay = disciplineRiskRaw.toFixed(2);
+  const disciplineRiskDataLevel = getDataLevel(disciplineRiskRaw, dataLevels);
+
+  // Inconsistency Risk
+  const recent5Points = thisHistory
+    .slice(-5)
+    .map((gw: { totalPoints: any }) => gw.totalPoints);
+  const meanPoints = calculateAverage(recent5Points);
+  const stdDevPoints = Math.sqrt(
+    recent5Points.reduce(
+      (sum: number, val: number) => sum + Math.pow(val - meanPoints, 2),
+      0
+    ) / recent5Points.length
+  );
+  const inconsistencyRiskRaw = meanPoints > 0 ? stdDevPoints / meanPoints : 0;
+  const inconsistencyRiskDisplay = inconsistencyRiskRaw.toFixed(2);
+  const inconsistencyRiskDataLevel = getDataLevel(
+    inconsistencyRiskRaw,
+    dataLevels
+  );
+
+  // Low Minutes Risk
+  const maxPossibleMinutes = completedGameweeks * 90;
+  const lowMinutesRiskRaw =
+    maxPossibleMinutes > 0
+      ? ((maxPossibleMinutes - playerKeyData.minutes) / maxPossibleMinutes) *
+        100
+      : 0;
+  const lowMinutesRiskDisplay = lowMinutesRiskRaw.toFixed(1);
+  const lowMinutesRiskDataLevel = getDataLevel(lowMinutesRiskRaw, dataLevels);
+
+  // Fixture Difficulty Risk
+  const upcomingDifficulties = thisHistory
+    .slice(0, 3)
+    .map((gw: { difficulty: any }) => gw.difficulty)
+    .filter((d: any) => typeof d === "number");
+  const fixtureDifficultyRiskRaw =
+    upcomingDifficulties.length > 0
+      ? calculateAverage(upcomingDifficulties)
+      : 3; // Neutral fallback
+  const fixtureDifficultyRiskDisplay = fixtureDifficultyRiskRaw.toFixed(1);
+  const fixtureDifficultyRiskDataLevel = getDataLevel(
+    fixtureDifficultyRiskRaw,
+    dataLevels
+  );
+
   return (
     <div className="px-8 mt-40">
       <Section>
@@ -391,8 +424,6 @@ const PlayerProfile = () => {
             dataLevel={veDataLevel}
             dataDisplay={parseFloat(valueEfficiencyDisplay)}
             dataRaw={valueEfficiencyRaw}
-            averageResult={veAverage}
-            highestResult={veHighest}
             fullName={playerKeyData.full_name}
             text={"Value Efficiency"}
           />
@@ -402,8 +433,6 @@ const PlayerProfile = () => {
             dataLevel={pp90DataLevel}
             dataDisplay={parseFloat(pp90Display)}
             dataRaw={pp90Raw}
-            averageResult={2.3}
-            highestResult={10.1}
             fullName={playerKeyData.full_name}
             text={"Points Per 90 mins"}
           />
@@ -414,8 +443,6 @@ const PlayerProfile = () => {
             dataLevel={roiDataLevel}
             dataDisplay={parseFloat(roiDisplay)}
             dataRaw={roiRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Return On Investment"}
           />
@@ -425,8 +452,6 @@ const PlayerProfile = () => {
             dataLevel={potDataLevel}
             dataDisplay={parseFloat(potDisplay)}
             dataRaw={potRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Price vs Output Trend"}
           />
@@ -439,8 +464,6 @@ const PlayerProfile = () => {
             dataLevel={upliftDataLevel}
             dataDisplay={parseFloat(upliftDisplay)}
             dataRaw={upliftRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Performance Uplift"}
           />
@@ -450,8 +473,6 @@ const PlayerProfile = () => {
             dataLevel={stdDevDataLevel}
             dataDisplay={parseFloat(stdDevDisplay)}
             dataRaw={stdDevRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Consistency Score"}
           />
@@ -462,8 +483,6 @@ const PlayerProfile = () => {
             dataLevel={momentumDataLevel}
             dataDisplay={parseFloat(momentumDisplay)}
             dataRaw={momentumRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Points Momentum"}
           />
@@ -473,8 +492,6 @@ const PlayerProfile = () => {
             dataLevel={explosivenessDataLevel}
             dataDisplay={parseFloat(explosivenessDisplay)}
             dataRaw={explosivenessRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Explosiveness"}
           />
@@ -487,8 +504,6 @@ const PlayerProfile = () => {
             dataLevel={girDataLevel}
             dataDisplay={parseFloat(goalInvolvementDisplay)}
             dataRaw={goalInvolvementRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Goal Involvement Rate"}
           />
@@ -498,8 +513,6 @@ const PlayerProfile = () => {
             dataLevel={differentialDataLevel}
             dataDisplay={parseFloat(differentialDisplay)}
             dataRaw={differentialRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Differential Potential"}
           />
@@ -510,8 +523,6 @@ const PlayerProfile = () => {
             dataLevel={exploitabilityDataLevel}
             dataDisplay={parseFloat(exploitabilityDisplay)}
             dataRaw={exploitabilityRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Exploitbility"}
           />
@@ -521,10 +532,47 @@ const PlayerProfile = () => {
             dataLevel={marketDataLevel}
             dataDisplay={parseFloat(marketDisplay)}
             dataRaw={marketRaw}
-            averageResult={0}
-            highestResult={0}
             fullName={playerKeyData.full_name}
             text={"Market Movement"}
+          />
+        </Card>
+      </Grid>
+      <Title className={""} title={"Influence & Market Dynamics"} />
+      <Grid columns={2} className={""}>
+        <Card className={""}>
+          <MetricCard
+            dataLevel={disciplineRiskDataLevel}
+            dataDisplay={parseFloat(disciplineRiskDisplay)}
+            dataRaw={disciplineRiskRaw}
+            fullName={playerKeyData.full_name}
+            text={"Discipline Risk"}
+          />
+        </Card>
+        <Card className={""}>
+          <MetricCard
+            dataLevel={inconsistencyRiskDataLevel}
+            dataDisplay={parseFloat(inconsistencyRiskDisplay)}
+            dataRaw={inconsistencyRiskRaw}
+            fullName={playerKeyData.full_name}
+            text={"Inconsistency Risk"}
+          />
+        </Card>
+        <Card className={""}>
+          <MetricCard
+            dataLevel={lowMinutesRiskDataLevel}
+            dataDisplay={parseFloat(lowMinutesRiskDisplay)}
+            dataRaw={lowMinutesRiskRaw}
+            fullName={playerKeyData.full_name}
+            text={"Low Minutes Risk"}
+          />
+        </Card>
+        <Card className={""}>
+          <MetricCard
+            dataLevel={fixtureDifficultyRiskDataLevel}
+            dataDisplay={parseFloat(fixtureDifficultyRiskDisplay)}
+            dataRaw={fixtureDifficultyRiskRaw}
+            fullName={playerKeyData.full_name}
+            text={"Fixture Difficulty Risk"}
           />
         </Card>
       </Grid>

@@ -35,14 +35,16 @@ const Header = ({ children, className = "" }: HeaderProps) => {
           </a>
           <img src={Logo.src} alt="Logo" className="max-w-[70px]" />
         </div>
-        <div>
-          <List />
-        </div>
-        <div className="absolute bottom-0 left-0 w-full h-0.5 pointer-events-none z-30 flex">
-          <div
-            style={{ backgroundColor: "#000000" }}
-            className="w-full h-full"
-          />
+        <div className="hidden lg:block">
+          <div>
+            <List />
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-0.5 pointer-events-none z-30 flex">
+            <div
+              style={{ backgroundColor: "#000000" }}
+              className="w-full h-full"
+            />
+          </div>
         </div>
       </Grid>
     </Section>

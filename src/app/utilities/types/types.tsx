@@ -20,6 +20,7 @@ export interface Position {
 }
 
 export interface Player {
+  bonus: number;
   goalsScored: any;
   assists: any;
   minutes: number;
@@ -62,7 +63,7 @@ export interface ComponentProps {
 }
 
 export interface MetricDataProps{
-  dataLevel: "low" | "moderate" | "good" | "high";
+  dataLevel: "low" | "moderate" | "high";
   dataDisplay: number;
   averageResult: number;
   highestResult: number;
@@ -72,7 +73,7 @@ export interface MetricDataProps{
 }
 
 export interface ValueEfficiencyProps {
-  valueEfficiencyLevel: "low" | "moderate" | "good" | "high";
+  valueEfficiencyLevel: "low" | "moderate" | "high" 
   valueEfficiencyDisplay: string;
   valueEfficiencyRaw: number;
   fullName: string;
