@@ -10,8 +10,7 @@ import Card from "@/app/components/atoms/card";
 import {
   getPlayerImage,
   getTeamBadge,
-  dataLevels,
-  getDataLevel,
+  buildMetricCardProps,
 } from "@/app/utilities/styles";
 import {
   getCompletedGameweeks,
@@ -23,9 +22,7 @@ import {
   reliabilityCardData,
   ICTCardData,
   calculateAverage,
-  calculateHighest,
 } from "@/app/utilities/fplData";
-import { calculatePlayerMetrics } from "@/app/utilities/fplMetrics";
 import Grid from "@/app/components/atoms/Grid";
 import ReliabilityStatsCard from "@/app/components/molecules/reliability-stats-card";
 import ATStatsCard from "@/app/components/molecules/AT-stats-card";
@@ -162,14 +159,13 @@ const PlayerProfile = () => {
         )
       : 0;
   const valueEfficiencyDisplay = valueEfficiencyRaw.toFixed(1);
-  const veDataLevel = getDataLevel(valueEfficiencyRaw, dataLevels);
+
   //Return On Investment
   const roiRaw =
     playerKeyData.value > 0
       ? playerKeyData.totalPoints / playerKeyData.value
       : 0;
   const roiDisplay = roiRaw.toFixed(1);
-  const roiDataLevel = getDataLevel(roiRaw, dataLevels);
 
   //points per 90 mins
   const pp90Raw =
@@ -177,7 +173,6 @@ const PlayerProfile = () => {
       ? (playerKeyData.totalPoints / playerKeyData.minutes) * 90
       : 0;
   const pp90Display = pp90Raw.toFixed(1);
-  const pp90DataLevel = getDataLevel(pp90Raw, dataLevels);
 
   // Price vs Output trend
   const priceHistory = thisHistory?.map((gw: { value: number }) => {
@@ -188,7 +183,6 @@ const PlayerProfile = () => {
   const priceChange = priceHistory.at(-1)! - priceHistory[0]; // Most recent - first
   const potRaw = formHistory - priceChange;
   const potDisplay = potRaw.toFixed(1);
-  const potDataLevel = getDataLevel(potRaw, dataLevels);
 
   //Performance Uplift
   const first3 = thisHistory
@@ -203,7 +197,6 @@ const PlayerProfile = () => {
 
   const upliftRaw = lastAvg - firstAvg;
   const upliftDisplay = upliftRaw.toFixed(1);
-  const upliftDataLevel = getDataLevel(upliftRaw, dataLevels);
 
   //Consistency Score
   const recentPoints = thisHistory
@@ -218,7 +211,6 @@ const PlayerProfile = () => {
     ) / recentPoints.length
   );
   const stdDevDisplay = stdDevRaw.toFixed(1);
-  const stdDevDataLevel = getDataLevel(stdDevRaw, dataLevels);
 
   //Points Momentum
   const pointsMomentum = thisHistory
@@ -226,7 +218,6 @@ const PlayerProfile = () => {
     .map((gw: { totalPoints: number }) => gw.totalPoints);
   const momentumRaw = calculateAverage(pointsMomentum);
   const momentumDisplay = momentumRaw.toFixed(1);
-  const momentumDataLevel = getDataLevel(momentumRaw, dataLevels);
 
   //Explosiveness
   const explosiveGames = thisHistory.filter(
@@ -234,7 +225,6 @@ const PlayerProfile = () => {
   ).length;
   const explosivenessRaw = (explosiveGames / completedGameweeks) * 100;
   const explosivenessDisplay = explosivenessRaw.toFixed(1);
-  const explosivenessDataLevel = getDataLevel(explosivenessRaw, dataLevels);
 
   //Goal Involvement Rate
   const goalInvolvementRaw =
@@ -244,14 +234,12 @@ const PlayerProfile = () => {
         90
       : 0;
   const goalInvolvementDisplay = goalInvolvementRaw.toFixed(2);
-  const girDataLevel = getDataLevel(goalInvolvementRaw, dataLevels);
 
   //Differential Potential
   const selectedBy = parseFloat(playerKeyData.stats.selected_by_percent);
   const differentialRaw =
     momentumRaw > 0 && selectedBy > 0 ? (momentumRaw / selectedBy) * 10 : 0;
   const differentialDisplay = differentialRaw.toFixed(1);
-  const differentialDataLevel = getDataLevel(differentialRaw, dataLevels);
 
   //Exploitability
   const difficultyValues = thisHistory
@@ -266,7 +254,6 @@ const PlayerProfile = () => {
   const exploitabilityRaw = avgDifficulty > 0 ? (form / avgDifficulty) * 10 : 0;
 
   const exploitabilityDisplay = exploitabilityRaw.toFixed(1);
-  const exploitabilityDataLevel = getDataLevel(exploitabilityRaw, dataLevels);
 
   // Market Movement
   const lastGW = thisHistory[thisHistory.length - 1];
@@ -288,7 +275,6 @@ const PlayerProfile = () => {
 
   const marketRaw = netTransfers / 10000 + marketChange;
   const marketDisplay = marketRaw.toFixed(1);
-  const marketDataLevel = getDataLevel(marketRaw, dataLevels);
 
   // Discipline Risk
   const disciplineRiskRaw =
@@ -296,7 +282,6 @@ const PlayerProfile = () => {
       ? (playerKeyData.bonus / playerKeyData.minutes) * 1000
       : 0;
   const disciplineRiskDisplay = disciplineRiskRaw.toFixed(2);
-  const disciplineRiskDataLevel = getDataLevel(disciplineRiskRaw, dataLevels);
 
   // Inconsistency Risk
   const recent5Points = thisHistory
@@ -311,10 +296,6 @@ const PlayerProfile = () => {
   );
   const inconsistencyRiskRaw = meanPoints > 0 ? stdDevPoints / meanPoints : 0;
   const inconsistencyRiskDisplay = inconsistencyRiskRaw.toFixed(2);
-  const inconsistencyRiskDataLevel = getDataLevel(
-    inconsistencyRiskRaw,
-    dataLevels
-  );
 
   // Low Minutes Risk
   const maxPossibleMinutes = completedGameweeks * 90;
@@ -324,7 +305,6 @@ const PlayerProfile = () => {
         100
       : 0;
   const lowMinutesRiskDisplay = lowMinutesRiskRaw.toFixed(1);
-  const lowMinutesRiskDataLevel = getDataLevel(lowMinutesRiskRaw, dataLevels);
 
   // Fixture Difficulty Risk
   const upcomingDifficulties = thisHistory
@@ -336,10 +316,114 @@ const PlayerProfile = () => {
       ? calculateAverage(upcomingDifficulties)
       : 3; // Neutral fallback
   const fixtureDifficultyRiskDisplay = fixtureDifficultyRiskRaw.toFixed(1);
-  const fixtureDifficultyRiskDataLevel = getDataLevel(
-    fixtureDifficultyRiskRaw,
-    dataLevels
-  );
+
+  const valueMetricData = [
+    buildMetricCardProps({
+      metricName: "Value Efficiency",
+      valueRaw: valueEfficiencyRaw,
+      valueDisplay: valueEfficiencyDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Return On Investment",
+      valueRaw: roiRaw,
+      valueDisplay: roiDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Points Per 90 Mins",
+      valueRaw: pp90Raw,
+      valueDisplay: pp90Display,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Price vs Output Trend",
+      valueRaw: potRaw,
+      valueDisplay: potDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+  ];
+
+  const formIndicatorData = [
+    buildMetricCardProps({
+      metricName: "Performance Uplift",
+      valueRaw: upliftRaw,
+      valueDisplay: upliftDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Consistency Score",
+      valueRaw: stdDevRaw,
+      valueDisplay: stdDevDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Points Momentum",
+      valueRaw: momentumRaw,
+      valueDisplay: momentumDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Explosiveness",
+      valueRaw: explosivenessRaw,
+      valueDisplay: explosivenessDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+  ];
+
+  const influenceDynamicData = [
+    buildMetricCardProps({
+      metricName: "Goal Involvement Rate",
+      valueRaw: goalInvolvementRaw,
+      valueDisplay: goalInvolvementDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Differential Potential",
+      valueRaw: differentialRaw,
+      valueDisplay: differentialDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Exploitability",
+      valueRaw: exploitabilityRaw,
+      valueDisplay: exploitabilityDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Market Movement",
+      valueRaw: marketRaw,
+      valueDisplay: marketDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+  ];
+
+  const riskDynamicData = [
+    buildMetricCardProps({
+      metricName: "Discipline Risk",
+      valueRaw: disciplineRiskRaw,
+      valueDisplay: disciplineRiskDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Inconsistency Risk",
+      valueRaw: inconsistencyRiskRaw,
+      valueDisplay: inconsistencyRiskDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Low Minutes Risk",
+      valueRaw: lowMinutesRiskRaw,
+      valueDisplay: lowMinutesRiskDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+    buildMetricCardProps({
+      metricName: "Fixture Difficulty Risk",
+      valueRaw: fixtureDifficultyRiskRaw,
+      valueDisplay: fixtureDifficultyRiskDisplay,
+      fullName: playerKeyData.full_name,
+    }),
+  ];
 
   return (
     <div className="px-8 mt-40">
@@ -419,162 +503,35 @@ const PlayerProfile = () => {
       </div>
       <Title className={""} title={"Value Insights"} />
       <Grid columns={2} className={""}>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={veDataLevel}
-            dataDisplay={parseFloat(valueEfficiencyDisplay)}
-            dataRaw={valueEfficiencyRaw}
-            fullName={playerKeyData.full_name}
-            text={"Value Efficiency"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={pp90DataLevel}
-            dataDisplay={parseFloat(pp90Display)}
-            dataRaw={pp90Raw}
-            fullName={playerKeyData.full_name}
-            text={"Points Per 90 mins"}
-          />
-        </Card>
-
-        <Card className={""}>
-          <MetricCard
-            dataLevel={roiDataLevel}
-            dataDisplay={parseFloat(roiDisplay)}
-            dataRaw={roiRaw}
-            fullName={playerKeyData.full_name}
-            text={"Return On Investment"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={potDataLevel}
-            dataDisplay={parseFloat(potDisplay)}
-            dataRaw={potRaw}
-            fullName={playerKeyData.full_name}
-            text={"Price vs Output Trend"}
-          />
-        </Card>
+        {valueMetricData.map((metric, i) => (
+          <Card key={i} className="">
+            <MetricCard key={i} {...metric} />
+          </Card>
+        ))}
       </Grid>
       <Title className={""} title={"Form & Consisency Indicators"} />
       <Grid columns={2} className={""}>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={upliftDataLevel}
-            dataDisplay={parseFloat(upliftDisplay)}
-            dataRaw={upliftRaw}
-            fullName={playerKeyData.full_name}
-            text={"Performance Uplift"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={stdDevDataLevel}
-            dataDisplay={parseFloat(stdDevDisplay)}
-            dataRaw={stdDevRaw}
-            fullName={playerKeyData.full_name}
-            text={"Consistency Score"}
-          />
-        </Card>
-
-        <Card className={""}>
-          <MetricCard
-            dataLevel={momentumDataLevel}
-            dataDisplay={parseFloat(momentumDisplay)}
-            dataRaw={momentumRaw}
-            fullName={playerKeyData.full_name}
-            text={"Points Momentum"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={explosivenessDataLevel}
-            dataDisplay={parseFloat(explosivenessDisplay)}
-            dataRaw={explosivenessRaw}
-            fullName={playerKeyData.full_name}
-            text={"Explosiveness"}
-          />
-        </Card>
+        {formIndicatorData.map((metric, i) => (
+          <Card key={i} className={""}>
+            <MetricCard key={i} {...metric} />
+          </Card>
+        ))}
       </Grid>
       <Title className={""} title={"Influence & Market Dynamics"} />
       <Grid columns={2} className={""}>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={girDataLevel}
-            dataDisplay={parseFloat(goalInvolvementDisplay)}
-            dataRaw={goalInvolvementRaw}
-            fullName={playerKeyData.full_name}
-            text={"Goal Involvement Rate"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={differentialDataLevel}
-            dataDisplay={parseFloat(differentialDisplay)}
-            dataRaw={differentialRaw}
-            fullName={playerKeyData.full_name}
-            text={"Differential Potential"}
-          />
-        </Card>
-
-        <Card className={""}>
-          <MetricCard
-            dataLevel={exploitabilityDataLevel}
-            dataDisplay={parseFloat(exploitabilityDisplay)}
-            dataRaw={exploitabilityRaw}
-            fullName={playerKeyData.full_name}
-            text={"Exploitbility"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={marketDataLevel}
-            dataDisplay={parseFloat(marketDisplay)}
-            dataRaw={marketRaw}
-            fullName={playerKeyData.full_name}
-            text={"Market Movement"}
-          />
-        </Card>
+        {influenceDynamicData.map((metric, i) => (
+          <Card key={i} className={""}>
+            <MetricCard key={i} {...metric} />
+          </Card>
+        ))}
       </Grid>
-      <Title className={""} title={"Influence & Market Dynamics"} />
+      <Title className={""} title={"Risk Dynamics"} />
       <Grid columns={2} className={""}>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={disciplineRiskDataLevel}
-            dataDisplay={parseFloat(disciplineRiskDisplay)}
-            dataRaw={disciplineRiskRaw}
-            fullName={playerKeyData.full_name}
-            text={"Discipline Risk"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={inconsistencyRiskDataLevel}
-            dataDisplay={parseFloat(inconsistencyRiskDisplay)}
-            dataRaw={inconsistencyRiskRaw}
-            fullName={playerKeyData.full_name}
-            text={"Inconsistency Risk"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={lowMinutesRiskDataLevel}
-            dataDisplay={parseFloat(lowMinutesRiskDisplay)}
-            dataRaw={lowMinutesRiskRaw}
-            fullName={playerKeyData.full_name}
-            text={"Low Minutes Risk"}
-          />
-        </Card>
-        <Card className={""}>
-          <MetricCard
-            dataLevel={fixtureDifficultyRiskDataLevel}
-            dataDisplay={parseFloat(fixtureDifficultyRiskDisplay)}
-            dataRaw={fixtureDifficultyRiskRaw}
-            fullName={playerKeyData.full_name}
-            text={"Fixture Difficulty Risk"}
-          />
-        </Card>
+        {riskDynamicData.map((metric, i) => (
+          <Card key={i} className={""}>
+            <MetricCard key={i} {...metric} />
+          </Card>
+        ))}
       </Grid>
     </div>
   );

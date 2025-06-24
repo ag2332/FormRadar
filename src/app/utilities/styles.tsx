@@ -123,7 +123,7 @@ export const metricDefinitions = {
       high: { color: "#15803d", background: "#dcfce7", maxLevel: 100 },
     },
   },
-  "Points Per 90": {
+  "Points Per 90 Mins": {
     description:
       "Average points scored per 90 minutes — helps compare players with different playtime.",
     legend: "6+: Elite | 4–5.9: Solid | <4: Low impact",
@@ -265,58 +265,76 @@ export const metricDefinitions = {
   },
 };
 
-export const dataLevels = {
-  low: {
-    color: "#ef4444",
-    background: "#fee2e2",
-    description:
-      " is considered low value for their price, offering limited returns relative to their market cost. These players often fail to justify their expense as their contributions to your team’s performance are minimal.",
-    recommendation:
-      "It's generally advisable to avoid or transfer out these players, as they provide poor value for money. Your budget could be better allocated to more cost-effective options that deliver stronger and more consistent.",
-    maxLevel: 25,
-  },
-  moderate: {
-    color: "#f97316",
-    background: "#fef3c7",
-    description:
-      " is a moderately efficient player who offers a balanced return relative to their price. While they may not produce standout performances regularly, their contributions are steady and provide acceptable value for their cost.",
-    recommendation:
-      "Players in this category provide acceptable value for their cost and can help maintain squad stability without overspending. While not typically game-changers, they are useful budget options for filling necessary roles and supporting star performers.",
-    maxLevel: 50,
-  },
-  high: {
-    color: "#15803d",
-    background: "#dcfce7",
-    description:
-      " delivers good value for money by consistently generating strong returns relative to their price tag. These players represent efficient use of budget, combining affordability with reliable and impactful performances.",
-    recommendation:
-      "Players at this level are smart investments, offering an excellent balance between cost and output. They should form the backbone of your squad, helping you maximize points without overspending.",
-    maxLevel: 75,
-  },
-};
+type MetricName = "Value Efficiency" | "Return On Investment" | "Points Per 90 Mins" | "Price vs Output Trend" | "Performance Uplift" | "Consistency Score" | "Points Momentum" | "Explosiveness" | "Goal Involvement Rate" | "Differential Potential" | "Exploitability" | "Market Movement" | "Discipline Risk" | "Inconsistency Risk" | "Low Minutes Risk" | "Fixture Difficulty Risk";
 
-export function getMetricStyle(metricName: string, rawValue: number) {
+export const getMetricStyle = (
+  metricName: MetricName,
+  value: number
+): {
+  levelName: "low" | "moderate" | "high";
+  color: string;
+  background: string;
+} => {
   const metric = metricDefinitions[metricName];
-  if (!metric) return null;
 
-  const levels = metric.levels;
-  const entries = Object.entries(levels);
-
-  for (const [key, level] of entries) {
-    if (rawValue <= level.maxLevel) {
-      return { ...level, levelName: key };
-    }
+  if (!metric) {
+    return {
+      levelName: "moderate",
+      color: "#6b7280", // gray fallback
+      background: "#f3f4f6",
+    };
   }
 
-  // fallback if not matched
-  return entries[entries.length - 1][1];
-}
+  const levels = metric.levels;
 
-export function getDataLevel(
-  value: number,
-  levels: typeof dataLevels
-): "low" | "moderate" | "high" {
-  if (value < levels.low.maxLevel) return "low";
-  if (value < levels.moderate.maxLevel) return "moderate";
-  return "high";
+  if (value <= levels.low.maxLevel) {
+    return {
+      levelName: "low",
+      color: levels.low.color,
+      background: levels.low.background,
+    };
+  } else if (value <= levels.moderate.maxLevel) {
+    return {
+      levelName: "moderate",
+      color: levels.moderate.color,
+      background: levels.moderate.background,
+    };
+  } else {
+    return {
+      levelName: "high",
+      color: levels.high.color,
+      background: levels.high.background,
+    };
+  }
+};
+
+export function buildMetricCardProps({
+  metricName,
+  valueRaw,
+  valueDisplay,
+  fullName,
+}: {
+  metricName: MetricName;
+  valueRaw: number;
+  valueDisplay?: string | number;
+  fullName: string;
+}) {
+  const def = metricDefinitions[metricName];
+  const style = getMetricStyle(metricName, valueRaw);
+
+  return {
+    dataLevel: style.levelName,
+    dataDisplay: valueDisplay ?? valueRaw.toFixed(1),
+    dataRaw: valueRaw,
+    fullName,
+    text: metricName,
+    levelData: {
+      color: style.color,
+      background: style.background,
+    },
+    definition: {
+      description: def?.description || "",
+      legend: def?.legend || "",
+    },
+  };
 }

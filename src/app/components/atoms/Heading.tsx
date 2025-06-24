@@ -7,6 +7,7 @@ export type HeadingProps = {
   text?: string;
   tag?:  HeadingType;
   style?:  HeadingType;
+  dataDisplay?: string | number;
   className?: string;
 };
 
