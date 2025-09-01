@@ -2,7 +2,6 @@ import React from "react";
 import Heading from "../atoms/Heading";
 import Grid from "../atoms/Grid";
 import Section from "../Section";
-import GaugeChart from "./gauge-chart";
 
 interface MetricCardProps {
   dataLevel: "low" | "moderate" | "high";

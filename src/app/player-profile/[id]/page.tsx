@@ -270,7 +270,6 @@ const PlayerProfile = () => {
   const netTransfers = totalTransfersIn - totalTransfersOut;
 
   const marketStart = firstGW.value / 10;
-  console.log(firstGW.value, lastGW.value);
   const marketEnd = lastGW.value / 10;
   const marketChange = marketEnd - marketStart;
 

@@ -1,5 +1,6 @@
 import Grid from "@/app/components/atoms/Grid";
 import DropDown from "../components/atoms/dropdown";
+import { Player } from "../utilities/types";
 
 function Home() {
   return (
@@ -18,8 +19,9 @@ function Home() {
           backgroundColor="white"
           borderRadius="3xl"
           selectSize={true}
-          inputSelect={true}
-        />
+          inputSelect={true} items={[]} onPlayerSelect={function (player: Player): void {
+            throw new Error("Function not implemented.");
+          } }        />
       </div>
     </Grid>
   );
