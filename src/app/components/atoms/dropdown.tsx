@@ -5,7 +5,6 @@ import {
   borderRadiusTopStyles,
   borderRadiusBottomStyles,
 } from "../../utilities/styles";
-import { Player } from "@/app/page";
 import { useRouter } from "next/navigation";
 import { DropDownProps } from "@/app/utilities/types";
 
